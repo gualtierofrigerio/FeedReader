@@ -15,14 +15,13 @@ class FeedViewModel:ObservableObject {
         if let url = Bundle.main.url(forResource: "test", withExtension: "xml") {
             let xmlHelper = XMLHelper()
             let publisher = xmlHelper.parseXML(atURL: url, elementName: "item")
-            self.test(url:url)
-//            cancellable = publisher.sink { xmlArrayDictionary in
-//                if let xmlArrayDictionary = xmlArrayDictionary,
-//                   let array = xmlArrayDictionary["item"] as? [[String:String]] {
-//                    self.feed = Feed.createFromArray(array)
-//                    self.test(url:url)
-//                }
-//            }
+            cancellable = publisher.sink { xmlArrayDictionary in
+                if let xmlArrayDictionary = xmlArrayDictionary,
+                   let array = xmlArrayDictionary["item"] as? [[String:String]] {
+                    self.feed = Feed.createFromArray(array)
+                    //self.test(url:url)
+                }
+            }
         }
     }
     
@@ -31,7 +30,11 @@ class FeedViewModel:ObservableObject {
         let publisher = xmlHelper.parseXML(atURL: url, elementName: nil)
         cancellable = publisher.sink { xmlArrayDictionary in
             if let xmlArrayDictionary = xmlArrayDictionary {
-               print(xmlArrayDictionary)
+                print(xmlArrayDictionary)
+                if let jsonObject = try? JSONSerialization.data(withJSONObject: xmlArrayDictionary, options: .prettyPrinted) {
+                    let jsonString = String(data: jsonObject, encoding: .utf8)
+                    print(jsonString!)
+                }
             }
         }
     }
