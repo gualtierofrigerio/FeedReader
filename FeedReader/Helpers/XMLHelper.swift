@@ -142,10 +142,6 @@ fileprivate class ParserAllTags:NSObject, XMLParserDelegate {
                 namespaceURI: String?,
                 qualifiedName qName: String?,
                 attributes attributeDict: [String : String] = [:]) {
-//        if currentElementName != "" {
-//            stack.append(currentElementName)
-//            print("stack \(stack)")
-//        }
         stack.append(currentDictionary)
         currentDictionary = [:]
         currentElementName = elementName
@@ -161,6 +157,9 @@ fileprivate class ParserAllTags:NSObject, XMLParserDelegate {
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
+        if string == "\n" {
+            return
+        }
         if let currentString = currentDictionary[currentElementName] as? String {
             currentDictionary[currentElementName] = currentString + string
         }
