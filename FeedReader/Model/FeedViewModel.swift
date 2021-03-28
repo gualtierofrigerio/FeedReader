@@ -14,10 +14,24 @@ class FeedViewModel:ObservableObject {
     init() {
         if let url = Bundle.main.url(forResource: "test", withExtension: "xml") {
             let xmlHelper = XMLHelper()
-            if let publisher = xmlHelper.parseXML(atURL: url, elementName: "item") {
-                cancellable = publisher.sink { xmlArrayDictionary in
-                    self.feed = Feed.createFromArray(xmlArrayDictionary)
-                }
+            let publisher = xmlHelper.parseXML(atURL: url, elementName: "item")
+            self.test(url:url)
+//            cancellable = publisher.sink { xmlArrayDictionary in
+//                if let xmlArrayDictionary = xmlArrayDictionary,
+//                   let array = xmlArrayDictionary["item"] as? [[String:String]] {
+//                    self.feed = Feed.createFromArray(array)
+//                    self.test(url:url)
+//                }
+//            }
+        }
+    }
+    
+    func test(url:URL) {
+        let xmlHelper = XMLHelper()
+        let publisher = xmlHelper.parseXML(atURL: url, elementName: nil)
+        cancellable = publisher.sink { xmlArrayDictionary in
+            if let xmlArrayDictionary = xmlArrayDictionary {
+               print(xmlArrayDictionary)
             }
         }
     }
