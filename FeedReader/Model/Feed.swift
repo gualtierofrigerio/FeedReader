@@ -19,7 +19,7 @@ extension Feed {
             if let title = element["title"],
                let url = element["link"] {
                 let topic = feedTopicHelper.getTopic(forText: title) ?? ""
-                let entry = FeedEntry(title: title, url: url, category: topic)
+                let entry = FeedEntry(title: title, urlString: url, category: topic)
                 entries.append(entry)
             }
         }
@@ -29,8 +29,13 @@ extension Feed {
 
 struct FeedEntry {
     var title:String
-    var url:String
+    var urlString:String
     var category:String
+    
+    var url:URL? {
+        let string = urlString.replacingOccurrences(of: "\n", with: "")
+        return URL(string: string)
+    }
 }
 
 extension FeedEntry:Identifiable {
