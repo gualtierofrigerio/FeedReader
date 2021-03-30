@@ -135,6 +135,32 @@ fileprivate class ParserAllTags:NSObject, XMLParserDelegate {
     private var rootDictionary:XMLDictionary = [:]
     private var stack:[XMLDictionary] = []
     
+    /// Add a dictionary to an existing one
+    /// If the key is already in the dictionary we need to create an array
+    /// - Parameters:
+    ///   - dictionary: the dictionary to add
+    ///   - toDictionary: the dictionary where the given dictionary will be added
+    ///   - key: the key
+    /// - Returns: the dictionary passed as toDictionary with the new value added
+    private func addDictionary(_ dictionary:XMLDictionary, toDictionary:XMLDictionary,
+                                      key:String) -> XMLDictionary {
+        var returnDictionary = toDictionary
+        if let array = returnDictionary[key] as? Array<XMLDictionary> {
+            var newArray = array
+            newArray.append(dictionary)
+            returnDictionary[key] = newArray
+        }
+        else if let dictionary = returnDictionary[key] as? XMLDictionary {
+            var array:[XMLDictionary] = [dictionary]
+            array.append(dictionary)
+            returnDictionary[key] = array
+        }
+        else {
+            returnDictionary[key] = dictionary
+        }
+        return returnDictionary
+    }
+    
     // MARK: - XMLParserDelegate
     
     func parser(_ parser: XMLParser,
@@ -152,7 +178,7 @@ fileprivate class ParserAllTags:NSObject, XMLParserDelegate {
                 namespaceURI: String?,
                 qualifiedName qName: String?) {
         var parentDictionary = stack.removeLast()
-        parentDictionary[elementName] = currentDictionary
+        parentDictionary = addDictionary(currentDictionary, toDictionary: parentDictionary, key: elementName)
         currentDictionary = parentDictionary
     }
     
