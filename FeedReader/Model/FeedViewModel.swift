@@ -10,6 +10,7 @@ import Foundation
 
 class FeedViewModel:ObservableObject {
     @Published var feed:Feed = Feed(entries: [])
+    var selectedEntry:FeedEntry?
     
     init() {
         if let url = Bundle.main.url(forResource: "test", withExtension: "xml") {
