@@ -19,7 +19,7 @@ struct FeedEntryView: View {
     }
 }
 
-fileprivate let testEntry = FeedEntry(title: "title", url: "https://test", category: "")
+fileprivate let testEntry = FeedEntry(title: "title", urlString: "https://test", category: "")
 
 struct FeedEntryView_Previews: PreviewProvider {
     static var previews: some View {
