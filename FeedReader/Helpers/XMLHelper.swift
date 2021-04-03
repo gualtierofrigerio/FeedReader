@@ -8,31 +8,51 @@
 import Foundation
 import Combine
 
+struct XMLElement {
+    var value:String
+    var attributes:[String:String]
+}
+
 typealias XMLDictionary = [String:Any]
 
 class XMLHelper:NSObject {
     func parseXML(atURL url:URL,
-                  elementName:String?,
                   completion:@escaping (XMLDictionary?) -> Void) {
         guard let parser = XMLParser(contentsOf: url) else {
             completion(nil)
             return
         }
         self.completion = completion
-        var helperParser:XMLParserDelegate
-        if let elementName = elementName {
-            helperParser = ParserSpecificElement(elementName: elementName, completion:completion)
+        let helperParser = ParserAllTags(completion: completion)
+        parser.delegate = helperParser
+        parser.parse()
+    }
+    
+    func parseXML(atURL url:URL,
+                  elementName:String,
+                  completion:@escaping (Array<XMLDictionary>?) -> Void) {
+        guard let parser = XMLParser(contentsOf: url) else {
+            completion(nil)
+            return
         }
-        else {
-            helperParser = ParserAllTags(completion: completion)
-        }
+        self.completionArray = completion
+        let helperParser = ParserSpecificElement(elementName: elementName, completion:completion)
         parser.delegate = helperParser
         parser.parse()
     }
     
     @available(iOS 13.0, *)
-    func parseXML(atURL url:URL, elementName:String?) -> AnyPublisher<XMLDictionary?, Never> {
+    func parseXML(atURL url:URL) -> AnyPublisher<XMLDictionary?, Never> {
         let subject = CurrentValueSubject<XMLDictionary?, Never>(nil)
+        parseXML(atURL: url) { dictionary in
+            subject.send(dictionary)
+        }
+        return subject.eraseToAnyPublisher()
+    }
+    
+    @available(iOS 13.0, *)
+    func parseXML(atURL url:URL, elementName:String) -> AnyPublisher<Array<XMLDictionary>?, Never> {
+        let subject = CurrentValueSubject<Array<XMLDictionary>?, Never>(nil)
         parseXML(atURL: url, elementName: elementName) { arrayDictionary in
             subject.send(arrayDictionary)
         }
@@ -41,13 +61,14 @@ class XMLHelper:NSObject {
     
     // MARK: - Private
     
+    private var completionArray:((Array<XMLDictionary>?) -> Void)?
     private var completion:((XMLDictionary?) -> Void)?
 }
 
 // MARK: - ParserSpecificElement
 
 fileprivate class ParserSpecificElement:NSObject, XMLParserDelegate {
-    init(elementName:String, completion:@escaping (XMLDictionary?) -> Void) {
+    init(elementName:String, completion:@escaping (Array<XMLDictionary>?) -> Void) {
         self.elementNameToGet = elementName
         self.completion = completion
     }
@@ -63,6 +84,9 @@ fileprivate class ParserSpecificElement:NSObject, XMLParserDelegate {
         }
         else if currentDictionary != nil {
             currentElementName = elementName
+        }
+        if let currentElementName = currentElementName {
+            addAttributes(attributeDict, forKey:currentElementName)
         }
     }
     
@@ -86,19 +110,22 @@ fileprivate class ParserSpecificElement:NSObject, XMLParserDelegate {
     }
     
     func parserDidEndDocument(_ parser: XMLParser) {
-        if let elementNameToGet = elementNameToGet {
-            let dictionary = [elementNameToGet : results]
-            completion(dictionary)
+        if let _ = elementNameToGet {
+            completion(results)
         }
     }
 
     // MARK: - Private
     
-    private var completion:(XMLDictionary?) -> Void
-    private var currentDictionary:[String:String]?
+    private var completion:(Array<XMLDictionary>?) -> Void
+    private var currentDictionary:XMLDictionary?
     private var currentElementName:String?
     private var elementNameToGet:String?
     private var results:[XMLDictionary] = []
+    
+    private func addAttributes(_ attributes:[String:String], forKey key:String) {
+        currentDictionary?[key] = XMLElement(value: "", attributes: attributes)
+    }
     
     private func addCurrentDictionaryToResults() {
         if let currentDictionary = currentDictionary {
@@ -108,11 +135,12 @@ fileprivate class ParserSpecificElement:NSObject, XMLParserDelegate {
     }
     
     private func addString(_ string:String, forKey key:String) {
-        if let currentValue = currentDictionary?[key] {
-            currentDictionary?[key] = currentValue + string
+        if let currentValue = currentDictionary?[key] as? XMLElement {
+            let valueString = currentValue.value + string
+            currentDictionary?[key] = XMLElement(value: valueString, attributes: currentValue.attributes)
         }
         else {
-            currentDictionary?[key] = string
+            currentDictionary?[key] = XMLElement(value: string, attributes: [:])
         }
     }
     
@@ -120,6 +148,9 @@ fileprivate class ParserSpecificElement:NSObject, XMLParserDelegate {
         currentDictionary = [:]
     }
 }
+
+
+
 
 // MARK: - ParserAllTags
 
@@ -186,11 +217,12 @@ fileprivate class ParserAllTags:NSObject, XMLParserDelegate {
         if string == "\n" {
             return
         }
-        if let currentString = currentDictionary[currentElementName] as? String {
-            currentDictionary[currentElementName] = currentString + string
+        if let currentValue = currentDictionary[currentElementName] as? XMLElement {
+            let valueString = currentValue.value + string
+            currentDictionary[currentElementName] = XMLElement(value: valueString, attributes: currentValue.attributes)
         }
         else {
-            currentDictionary[currentElementName] = string
+            currentDictionary[currentElementName] = XMLElement(value: string, attributes: [:])
         }
     }
     
@@ -198,3 +230,4 @@ fileprivate class ParserAllTags:NSObject, XMLParserDelegate {
         completion(currentDictionary)
     }
 }
+
