@@ -12,14 +12,22 @@ struct Feed {
 }
 
 extension Feed {
-    static func createFromArray(_ array: [[String:String]]) -> Self {
+    static func createFromArray(_ array: [XMLDictionary]) -> Self {
         let feedTopicHelper = FeedTopicHelper()
         var entries:[FeedEntry] = []
         for element in array {
-            if let title = element["title"],
-               let url = element["link"] {
+            if let elementTitle = element["title"] as? XMLElement,
+               let elementLink = element["link"] as? XMLElement {
+                let title = elementTitle.value
+                let url = elementLink.value
                 let topic = feedTopicHelper.getTopic(forText: title) ?? ""
-                let entry = FeedEntry(title: title, urlString: url, category: topic)
+                var entry = FeedEntry(title: title, urlString: url, category: topic)
+                if let elementEnclosure = element["enclosure"] as? XMLElement,
+                   let imageUrlString = elementEnclosure.attributes["url"] {
+                    let imageUrl = URL(string: imageUrlString)
+                    entry.image = imageUrl
+                }
+                
                 entries.append(entry)
             }
         }
@@ -27,19 +35,3 @@ extension Feed {
     }
 }
 
-struct FeedEntry {
-    var title:String
-    var urlString:String
-    var category:String
-    
-    var url:URL? {
-        let string = urlString.replacingOccurrences(of: "\n", with: "")
-        return URL(string: string)
-    }
-}
-
-extension FeedEntry:Identifiable {
-    var id: String {
-        title
-    }
-}
