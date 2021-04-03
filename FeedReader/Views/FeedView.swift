@@ -14,43 +14,34 @@ struct FeedView: View {
         NavigationView {
             List(viewModel.feed.entries) { entry in
                 Button {
-                    buttonTap(entry: entry)
+                    viewModel.userSelectedEntry(entry)
                 } label: {
                     FeedEntryView(entry:entry)
                 }
             }.navigationTitle("Feed")
         }
-        .sheet(isPresented: $showSheet) {
+        .sheet(isPresented: $viewModel.showSheet) {
             dynamicSheet
         }
-        .alert(isPresented: $showAlert) {
-            Alert(title: Text("Error"),
-                  message: Text("Cannot open article"),
-                  dismissButton: .default(Text("Ok")))
+        .alert(isPresented: $viewModel.showAlert) {
+            dynamicAlert
         }
     }
     
     // MARK: - Private
-    @State private var showAlert = false
-    @State private var showSheet = false
+    
+    private var dynamicAlert: Alert {
+        Alert(title: Text("Error"),
+              message: Text(viewModel.errorMessage),
+              dismissButton: .default(Text("Ok")))
+    }
     
     @ViewBuilder private var dynamicSheet: some View {
-        if let entry = viewModel.selectedEntry,
-           let url = entry.url {
-            ArticleView(url: url)
+        if let articleViewModel = viewModel.selectedArticleViewModel {
+            ArticleView(viewModel:articleViewModel)
         }
         else {
             Text("Error while opening the requested article")
-        }
-    }
-    
-    private func buttonTap(entry:FeedEntry) {
-        if let _ = entry.url {
-            viewModel.selectedEntry = entry
-            showSheet = true
-        }
-        else {
-            showAlert = true
         }
     }
 }
