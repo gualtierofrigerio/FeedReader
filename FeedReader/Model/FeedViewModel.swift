@@ -10,33 +10,34 @@ import Foundation
 
 class FeedViewModel:ObservableObject {
     @Published var feed:Feed = Feed(entries: [])
-    var selectedEntry:FeedEntry?
+    // selectedEntry is @Published so once we select an entry
+    // the SwiftUI view will reload and have access to showAlert and showSheet
+    @Published var selectedArticleViewModel:ArticleViewModel?
+    var showAlert = false
+    var showSheet = false
+    
+    var errorMessage:String = ""
     
     init() {
         if let url = Bundle.main.url(forResource: "test", withExtension: "xml") {
             let xmlHelper = XMLHelper()
             let publisher = xmlHelper.parseXML(atURL: url, elementName: "item")
-            cancellable = publisher.sink { xmlArrayDictionary in
-                if let xmlArrayDictionary = xmlArrayDictionary,
-                   let array = xmlArrayDictionary["item"] as? [[String:String]] {
-                    self.feed = Feed.createFromArray(array)
-                    //self.test(url:url)
+            cancellable = publisher.sink { xmlArray in
+                if let xmlArray = xmlArray {
+                    self.feed = Feed.createFromArray(xmlArray)
                 }
             }
         }
     }
     
-    func test(url:URL) {
-        let xmlHelper = XMLHelper()
-        let publisher = xmlHelper.parseXML(atURL: url, elementName: nil)
-        cancellable = publisher.sink { xmlArrayDictionary in
-            if let xmlArrayDictionary = xmlArrayDictionary {
-                print(xmlArrayDictionary)
-                if let jsonObject = try? JSONSerialization.data(withJSONObject: xmlArrayDictionary, options: .prettyPrinted) {
-                    let jsonString = String(data: jsonObject, encoding: .utf8)
-                    print(jsonString!)
-                }
-            }
+    func userSelectedEntry(_ entry:FeedEntry) {
+        selectedArticleViewModel = ArticleViewModel(withArticle: entry)
+        if let _ = entry.url {
+            showSheet = true
+        }
+        else {
+            errorMessage = "Cannot open article"
+            showAlert = true
         }
     }
     
