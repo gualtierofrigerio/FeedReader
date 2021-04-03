@@ -10,11 +10,16 @@ import SwiftUI
 struct FeedEntryView: View {
     var entry:FeedEntry
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(entry.title)
-            Text(entry.category)
-                .font(Font.caption)
-                .foregroundColor(.secondary)
+        HStack {
+            if let url = entry.image {
+                ImageView(withURL: url)
+            }
+            VStack(alignment: .leading) {
+                Text(entry.title)
+                Text(entry.category)
+                    .font(Font.caption)
+                    .foregroundColor(.secondary)
+            }
         }
     }
 }
