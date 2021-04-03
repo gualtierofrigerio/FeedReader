@@ -9,17 +9,27 @@ import SwiftUI
 import SafariServices
 
 struct ArticleView: View {
-    var url:URL
+    @ObservedObject var viewModel:ArticleViewModel
+    
     var body: some View {
-        SafariView(url: url)
+        if viewModel.showError {
+            Text(viewModel.errorMessage)
+        }
+        else if let url = viewModel.article.url {
+            SafariView(url: url, delegate: viewModel)
+        }
     }
+    
+    private let safariDelegate = SafariViewDelegate()
 }
 
 struct SafariView:UIViewControllerRepresentable {
     let url: URL
+    let delegate:SFSafariViewControllerDelegate
 
     func makeUIViewController(context: UIViewControllerRepresentableContext<SafariView>) -> SFSafariViewController {
         let safariVC = SFSafariViewController(url: url)
+        safariVC.delegate = delegate
         return safariVC
     }
     
@@ -28,10 +38,18 @@ struct SafariView:UIViewControllerRepresentable {
     }
 }
 
-fileprivate let testURL = URL(string:"https://www.apple.com")!
+fileprivate class SafariViewDelegate:NSObject, SFSafariViewControllerDelegate {
+    func safariViewController(_ controller: SFSafariViewController, didCompleteInitialLoad didLoadSuccessfully: Bool) {
+        
+    }
+}
+
+fileprivate let testEntry = FeedEntry(title: "Title",
+                                      urlString: "https://www.apple.com",
+                                      category: "")
 
 struct ArticleView_Previews: PreviewProvider {
     static var previews: some View {
-        ArticleView(url:testURL)
+        ArticleView(viewModel: ArticleViewModel(withArticle: testEntry))
     }
 }
