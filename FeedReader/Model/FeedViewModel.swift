@@ -18,6 +18,10 @@ class FeedViewModel:ObservableObject {
     
     var errorMessage:String = ""
     
+    var categories:[String] = {
+        FeedTopicHelper.classNames
+    }()
+    
     init() {
         if let url = Bundle.main.url(forResource: "test", withExtension: "xml") {
             let xmlHelper = XMLHelper()
@@ -28,6 +32,27 @@ class FeedViewModel:ObservableObject {
                 }
             }
         }
+    }
+    
+    init(withURLString urlString:String) {
+        if let url = URL(string: urlString) {
+            let xmlHelper = XMLHelper()
+            let publisher = xmlHelper.parseXML(atURL: url, elementName: "item")
+            cancellable = publisher.sink { xmlArray in
+                if let xmlArray = xmlArray {
+                    self.feed = Feed.createFromArray(xmlArray)
+                }
+            }
+        }
+    }
+    
+    func updateModel() {
+        feedTopicHelper.updateModel(withEntries: feed.entries)
+    }
+    
+    func userChangedCategory(category:String, toEntry:FeedEntry) {
+        //feedTopicHelper.updateCategory(category:category, entry:toEntry)
+        feed.updateCategory(category: category, forEntry: toEntry)
     }
     
     func userSelectedEntry(_ entry:FeedEntry) {
@@ -43,4 +68,5 @@ class FeedViewModel:ObservableObject {
     
     // MARK: - Private
     private var cancellable:AnyCancellable?
+    private var feedTopicHelper = FeedTopicHelper()
 }
