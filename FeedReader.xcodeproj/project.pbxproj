@@ -23,6 +23,8 @@
 		25C49478260E309E00FD2758 /* FeedEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C49477260E309E00FD2758 /* FeedEntryView.swift */; };
 		25C4947F260E495300FD2758 /* FeedTopicHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C4947E260E495300FD2758 /* FeedTopicHelper.swift */; };
 		25C4948D260E4DA300FD2758 /* AppleTopics.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 25C4948C260E4DA300FD2758 /* AppleTopics.mlmodel */; };
+		25CAAB5C261C53B5009FB26D /* RESTClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CAAB5B261C53B5009FB26D /* RESTClient.swift */; };
+		25CAAB6A261DBAFE009FB26D /* AppleTopicsTC.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 25CAAB69261DBAFE009FB26D /* AppleTopicsTC.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +46,8 @@
 		25C49477260E309E00FD2758 /* FeedEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedEntryView.swift; sourceTree = "<group>"; };
 		25C4947E260E495300FD2758 /* FeedTopicHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTopicHelper.swift; sourceTree = "<group>"; };
 		25C4948C260E4DA300FD2758 /* AppleTopics.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = AppleTopics.mlmodel; sourceTree = "<group>"; };
+		25CAAB5B261C53B5009FB26D /* RESTClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RESTClient.swift; sourceTree = "<group>"; };
+		25CAAB69261DBAFE009FB26D /* AppleTopicsTC.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = AppleTopicsTC.mlmodel; path = TrainingData/AppleTopicsTC.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				25C4948C260E4DA300FD2758 /* AppleTopics.mlmodel */,
+				25CAAB69261DBAFE009FB26D /* AppleTopicsTC.mlmodel */,
 				25C4946D260E238500FD2758 /* test.xml */,
 				25C49459260E1E2A00FD2758 /* FeedReader */,
 				25C49458260E1E2A00FD2758 /* Products */,
@@ -124,6 +129,7 @@
 			children = (
 				25C4947E260E495300FD2758 /* FeedTopicHelper.swift */,
 				25B0E57B2613524D006DBE5E /* ImageLoader.swift */,
+				25CAAB5B261C53B5009FB26D /* RESTClient.swift */,
 				25C4946A260E233900FD2758 /* XMLHelper.swift */,
 			);
 			path = Helpers;
@@ -199,6 +205,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25CAAB6A261DBAFE009FB26D /* AppleTopicsTC.mlmodel in Sources */,
+				25CAAB5C261C53B5009FB26D /* RESTClient.swift in Sources */,
 				25B0E57F261352B4006DBE5E /* ImageView.swift in Sources */,
 				25C4945D260E1E2A00FD2758 /* FeedView.swift in Sources */,
 				25C49478260E309E00FD2758 /* FeedEntryView.swift in Sources */,
