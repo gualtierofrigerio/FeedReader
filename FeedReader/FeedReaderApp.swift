@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct FeedReaderApp: App {
+    let feedURLString = "https://www.macworld.co.uk/latest/rss"
+    
     var body: some Scene {
         WindowGroup {
-            FeedView(viewModel: FeedViewModel())
+            FeedView(viewModel: FeedViewModel(withURLString: feedURLString))
         }
     }
 }
