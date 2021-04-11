@@ -2,4 +2,5 @@
 
 Sample project to experiment with Machine Learning 
 
-Still work in progress
+See blog post http://www.gfrigerio.com/text-classification-with-coreml/ 
+
