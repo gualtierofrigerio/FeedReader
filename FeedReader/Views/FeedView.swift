@@ -12,11 +12,18 @@ struct FeedView: View {
     
     var body: some View {
         NavigationView {
-            List(viewModel.feed.entries) { entry in
-                Button {
-                    viewModel.userSelectedEntry(entry)
-                } label: {
-                    FeedEntryView(entry:entry)
+            VStack {
+                List(viewModel.feed.entries) { entry in
+                    Button {
+                        viewModel.userSelectedEntry(entry)
+                    } label: {
+                        FeedEntryView(entry:entry, tapCategoryAction: {
+                            tapCategoryAction(entry: entry)
+                        })
+                    }
+                }
+                if showCategoryPicker {
+                    categoryPicker
                 }
             }.navigationTitle("Feed")
         }
@@ -29,6 +36,26 @@ struct FeedView: View {
     }
     
     // MARK: - Private
+    @State private var selectedCategory:String = ""
+    @State private var selectedEntry:FeedEntry?
+    @State private var showCategoryPicker = false
+    
+    @ViewBuilder private var categoryPicker: some View {
+        VStack {
+            Text("Select category")
+            Picker(selection: $selectedCategory, label: Text("Select the category:")) {
+                ForEach(viewModel.categories, id: \.self) { category in
+                    Text(category)
+                }
+            }.onChange(of: selectedCategory) { value in
+                print("selected category \(value)")
+                showCategoryPicker.toggle()
+                if let entry = selectedEntry {
+                    viewModel.userChangedCategory(category: selectedCategory, toEntry: entry)
+                }
+            }
+        }
+    }
     
     private var dynamicAlert: Alert {
         Alert(title: Text("Error"),
@@ -43,6 +70,11 @@ struct FeedView: View {
         else {
             Text("Error while opening the requested article")
         }
+    }
+    
+    private func tapCategoryAction(entry:FeedEntry) {
+        showCategoryPicker.toggle()
+        selectedEntry = entry
     }
 }
 
