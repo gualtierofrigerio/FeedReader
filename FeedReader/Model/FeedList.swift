@@ -7,20 +7,21 @@
 
 import Foundation
 
-enum FeedListEntryType: String {
-    case online
-    case local
-    case aggregated
-}
-
-struct FeedListEntry {
-    var name:String
-    var url:String
-    var type:FeedListEntryType
-}
-
 struct FeedList {
     var entries:[FeedListEntry]
+}
+
+extension FeedList {
+    static func initWithArray(_ array:[[String:String]]) -> Self {
+        let entries = array.compactMap({ element in
+            FeedListEntry.initWithDictionary(element)
+        })
+        return FeedList(entries: entries)
+    }
+    
+    func toArray() -> [[String:String]] {
+        entries.map {$0.toDictionary()}
+    }
 }
 
 extension FeedList {
