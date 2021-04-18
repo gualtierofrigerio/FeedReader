@@ -11,22 +11,21 @@ struct FeedView: View {
     @ObservedObject var viewModel:FeedViewModel
     
     var body: some View {
-        NavigationView {
-            VStack {
-                List(viewModel.feed.entries) { entry in
-                    Button {
-                        viewModel.userSelectedEntry(entry)
-                    } label: {
-                        FeedEntryView(entry:entry, tapCategoryAction: {
-                            tapCategoryAction(entry: entry)
-                        })
-                    }
+        VStack {
+            List(viewModel.feed.entries) { entry in
+                Button {
+                    viewModel.userSelectedEntry(entry)
+                } label: {
+                    FeedEntryView(entry:entry, tapCategoryAction: {
+                        tapCategoryAction(entry: entry)
+                    })
                 }
-                if showCategoryPicker {
-                    categoryPicker
-                }
-            }.navigationTitle("Feed")
+            }
+            if showCategoryPicker {
+                categoryPicker
+            }
         }
+        .navigationTitle("Feed")
         .sheet(isPresented: $viewModel.showSheet) {
             dynamicSheet
         }
