@@ -21,7 +21,15 @@ struct FeedListEntry {
 
 extension FeedListEntry {
     static func initWithDictionary(_ dictionary:[String:String]) -> Self? {
-        return nil
+        guard let name = dictionary["name"],
+              let url = dictionary["url"],
+              let type = dictionary["type"] else { return nil }
+        
+        var entryType = FeedListEntryType.online
+        if let typeFromString = FeedListEntryType(rawValue: type) {
+            entryType = typeFromString
+        }
+        return FeedListEntry(name: name, url: url, type: entryType)
     }
     
     func toDictionary() -> [String:String] {
