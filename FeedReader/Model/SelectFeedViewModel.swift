@@ -19,6 +19,11 @@ class SelectFeedViewModel: ObservableObject {
         saveEntries()
     }
     
+    func removeEntry(offset:IndexSet) {
+        feedList.entries.remove(atOffsets: offset)
+        saveEntries()
+    }
+    
     // MARK: - Private
     
     private func loadEntries() {
