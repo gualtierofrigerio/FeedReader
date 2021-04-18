@@ -8,12 +8,12 @@
 import SwiftUI
 
 @main
-struct FeedReaderApp: App {
-    let feedURLString = "https://www.macworld.co.uk/latest/rss"
-    
+struct FeedReaderApp: App {    
     var body: some Scene {
         WindowGroup {
-            FeedView(viewModel: FeedViewModel(withURLString: feedURLString))
+            NavigationView {
+                SelectFeed(viewModel: SelectFeedViewModel())
+            }
         }
     }
 }
