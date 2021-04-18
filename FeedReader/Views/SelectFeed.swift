@@ -14,7 +14,7 @@ struct SelectFeed: View {
     var body: some View {
         VStack {
             HStack {
-                Text("List of feeds")
+                Text("Add new feed")
                     .padding()
                 Button {
                     showSheet.toggle()
@@ -22,13 +22,16 @@ struct SelectFeed: View {
                     Image(systemName: "plus")
                 }
             }
-            List(viewModel.feedList.entries, id:\.name) { entry in
-                NavigationLink(destination: feedViewForEntry(entry)) {
-                    Text(entry.name)
+            List {
+                ForEach(viewModel.feedList.entries, id:\.name) { entry in
+                    NavigationLink(destination: feedViewForEntry(entry)) {
+                        Text(entry.name)
+                    }
                 }
+                .onDelete(perform:deleteElement)
             }
         }
-        .navigationBarTitle("Select feed")
+        .navigationBarTitle("Your feeds")
         .sheet(isPresented: $showSheet) {
             VStack {
                 Form {
@@ -51,6 +54,10 @@ struct SelectFeed: View {
     private func addEntry() {
         viewModel.addEntry(name: newFeedName, url: newFeedURL)
         showSheet = false
+    }
+    
+    private func deleteElement(at offset:IndexSet) {
+        viewModel.removeEntry(offset:offset)
     }
     
     private func feedViewForEntry(_ entry:FeedListEntry) -> some View {
