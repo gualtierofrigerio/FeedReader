@@ -23,13 +23,14 @@ class SelectFeedViewModel: ObservableObject {
     
     private func loadEntries() {
         let defaults = UserDefaults.standard
-        if let entries = defaults.object(forKey: "feed_entries") as? [FeedListEntry] {
-            feedList = FeedList(entries: entries)
+        if let entriesArray = defaults.object(forKey: "feed_entries") as? [[String:String]] {
+            feedList = FeedList.initWithArray(entriesArray)
         }
     }
     
     private func saveEntries() {
         let defaults = UserDefaults.standard
-        defaults.set(feedList.entries, forKey: "feed_entries")
+        let entries = feedList.toArray()
+        defaults.set(entries, forKey: "feed_entries")
     }
 }
