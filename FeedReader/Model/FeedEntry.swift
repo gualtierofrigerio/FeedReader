@@ -12,7 +12,6 @@ struct FeedEntry {
     var urlString:String
     var category:String
     var image:URL?
-    var selectedCategory:String?
     
     var url:URL? {
         let string = urlString.replacingOccurrences(of: "\n", with: "")
