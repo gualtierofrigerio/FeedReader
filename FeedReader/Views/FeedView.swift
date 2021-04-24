@@ -12,20 +12,27 @@ struct FeedView: View {
     
     var body: some View {
         VStack {
-            List(viewModel.feed.entries) { entry in
-                Button {
-                    viewModel.userSelectedEntry(entry)
-                } label: {
-                    FeedEntryView(entry:entry, tapCategoryAction: {
-                        tapCategoryAction(entry: entry)
-                    })
+            if viewModel.feed.entries.count == 0 {
+                Text("Feed empty")
+            }
+            else {
+                List(viewModel.feed.entries) { entry in
+                    Button {
+                        viewModel.userSelectedEntry(entry)
+                    } label: {
+                        FeedEntryView(entry:entry,
+                                      tapCategoryAction: {
+                                        tapCategoryAction(entry: entry)
+                                      },
+                                      toggleFavorite: {
+                                        viewModel.entryToggleFavorite(entry)
+                                      },
+                                      isFavorite: viewModel.entryIsFavorite(entry))
+                    }
                 }
             }
-            if showCategoryPicker {
-                categoryPicker
-            }
         }
-        .navigationTitle("Feed")
+        .navigationTitle(viewModel.feedName)
         .sheet(isPresented: $viewModel.showSheet) {
             dynamicSheet
         }
@@ -39,23 +46,6 @@ struct FeedView: View {
     @State private var selectedEntry:FeedEntry?
     @State private var showCategoryPicker = false
     
-    @ViewBuilder private var categoryPicker: some View {
-        VStack {
-            Text("Select category")
-            Picker(selection: $selectedCategory, label: Text("Select the category:")) {
-                ForEach(viewModel.categories, id: \.self) { category in
-                    Text(category)
-                }
-            }.onChange(of: selectedCategory) { value in
-                print("selected category \(value)")
-                showCategoryPicker.toggle()
-                if let entry = selectedEntry {
-                    viewModel.userChangedCategory(category: selectedCategory, toEntry: entry)
-                }
-            }
-        }
-    }
-    
     private var dynamicAlert: Alert {
         Alert(title: Text("Error"),
               message: Text(viewModel.errorMessage),
@@ -64,26 +54,42 @@ struct FeedView: View {
     
     @ViewBuilder private var dynamicSheet: some View {
         if let articleViewModel = viewModel.selectedArticleViewModel {
-            ArticleView(viewModel:articleViewModel)
+            VStack {
+                favoritesBar
+                ArticleView(viewModel:articleViewModel)
+            }
         }
         else {
             Text("Error while opening the requested article")
         }
     }
     
+    @ViewBuilder private var favoritesBar: some View {
+        HStack {
+            Button {
+                viewModel.closeSheet()
+            } label: {
+                Text("Done")
+            }.padding()
+            Spacer()
+            Button {
+                viewModel.selectedArticleToggleFavorite()
+            } label: {
+                HStack {
+                    if viewModel.selectedArticleIsFavorite {
+                        Image(systemName: "heart.fill")
+                    }
+                    else {
+                        Image(systemName: "heart")
+                    }
+                }.padding()
+            }
+        }
+    }
+    
     private func tapCategoryAction(entry:FeedEntry) {
         showCategoryPicker.toggle()
         selectedEntry = entry
-    }
-}
-
-struct ConsoleLogView:View {
-    init(_ message:String) {
-        print(message)
-    }
-    
-    var body: some View {
-        EmptyView()
     }
 }
 
