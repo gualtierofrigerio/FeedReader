@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SafariServices
+import WebKit
 
 struct ArticleView: View {
     @ObservedObject var viewModel:ArticleViewModel
@@ -15,15 +16,19 @@ struct ArticleView: View {
         if viewModel.showError {
             Text(viewModel.errorMessage)
         }
-        else if let url = viewModel.article.url {
-            SafariView(url: url, delegate: viewModel)
+        ZStack {
+            if let url = viewModel.article.url {
+                //SafariView(url: url, delegate: viewModel)
+                WebKitView(url: url, delegate: viewModel)
+            }
+            if viewModel.showSpinner {
+                ProgressView()
+            }
         }
     }
-    
-    private let safariDelegate = SafariViewDelegate()
 }
 
-struct SafariView:UIViewControllerRepresentable {
+struct SafariView: UIViewControllerRepresentable {
     let url: URL
     let delegate:SFSafariViewControllerDelegate
 
@@ -38,11 +43,22 @@ struct SafariView:UIViewControllerRepresentable {
     }
 }
 
-fileprivate class SafariViewDelegate:NSObject, SFSafariViewControllerDelegate {
-    func safariViewController(_ controller: SFSafariViewController, didCompleteInitialLoad didLoadSuccessfully: Bool) {
+struct WebKitView: UIViewRepresentable {
+    let url: URL
+    let delegate:WKNavigationDelegate
+    
+    func makeUIView(context: Context) -> some UIView {
+        let webView = WKWebView()
+        webView.navigationDelegate = delegate
+        webView.load(URLRequest(url: url))
+        return webView
+    }
+    
+    func updateUIView(_ uiView: UIViewType, context: Context) {
         
     }
 }
+
 
 fileprivate let testEntry = FeedEntry(title: "Title",
                                       urlString: "https://www.apple.com",

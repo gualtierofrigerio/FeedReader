@@ -7,11 +7,13 @@
 
 import Foundation
 import SafariServices
+import WebKit
 
 class ArticleViewModel: NSObject,ObservableObject {
     var article:FeedEntry
     var errorMessage = ""
     @Published var showError = false
+    @Published var showSpinner = true
     
     init(withArticle article:FeedEntry) {
         self.article = article
@@ -25,5 +27,18 @@ extension ArticleViewModel: SFSafariViewControllerDelegate {
             showError = true
             errorMessage = "Error while loading article"
         }
+        showSpinner = false
+    }
+}
+
+extension ArticleViewModel: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        showError = true
+        errorMessage = "Error while loading article"
+        showSpinner = false
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        showSpinner = false
     }
 }
