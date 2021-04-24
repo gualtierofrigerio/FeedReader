@@ -9,8 +9,7 @@ import Foundation
 
 enum FeedListEntryType: String {
     case online = "online"
-    case local = "local"
-    case aggregated = "aggregated"
+    case favorites = "favorites"
 }
 
 struct FeedListEntry {
