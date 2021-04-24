@@ -27,10 +27,6 @@ class FeedTopicHelper {
         return topic
     }
     
-    func updateModel(withEntries entries:[FeedEntry]) {
-        // TODO first I need to make the model updatable
-    }
-    
     // MARK: - Private
     
     private func wordsFromText(text:String) -> [String:Double] {
