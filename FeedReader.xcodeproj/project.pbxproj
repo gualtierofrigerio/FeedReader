@@ -27,6 +27,9 @@
 		25C4947F260E495300FD2758 /* FeedTopicHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C4947E260E495300FD2758 /* FeedTopicHelper.swift */; };
 		25C4948D260E4DA300FD2758 /* AppleTopics.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 25C4948C260E4DA300FD2758 /* AppleTopics.mlmodel */; };
 		25C9BD9A262B499D007C8D8B /* FeedListEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C9BD99262B499D007C8D8B /* FeedListEntry.swift */; };
+		25C9BD9E262D7DD7007C8D8B /* FavoritesHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C9BD9D262D7DD7007C8D8B /* FavoritesHandler.swift */; };
+		25C9BDA3262D8EDC007C8D8B /* ConsoleLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C9BDA2262D8EDC007C8D8B /* ConsoleLogView.swift */; };
+		25C9BDA7262DC32E007C8D8B /* StorageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C9BDA6262DC32E007C8D8B /* StorageUtils.swift */; };
 		25CAAB5C261C53B5009FB26D /* RESTClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CAAB5B261C53B5009FB26D /* RESTClient.swift */; };
 		25CAAB6A261DBAFE009FB26D /* AppleTopicsTC.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 25CAAB69261DBAFE009FB26D /* AppleTopicsTC.mlmodel */; };
 /* End PBXBuildFile section */
@@ -54,6 +57,9 @@
 		25C4947E260E495300FD2758 /* FeedTopicHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTopicHelper.swift; sourceTree = "<group>"; };
 		25C4948C260E4DA300FD2758 /* AppleTopics.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = AppleTopics.mlmodel; sourceTree = "<group>"; };
 		25C9BD99262B499D007C8D8B /* FeedListEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedListEntry.swift; sourceTree = "<group>"; };
+		25C9BD9D262D7DD7007C8D8B /* FavoritesHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesHandler.swift; sourceTree = "<group>"; };
+		25C9BDA2262D8EDC007C8D8B /* ConsoleLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleLogView.swift; sourceTree = "<group>"; };
+		25C9BDA6262DC32E007C8D8B /* StorageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageUtils.swift; sourceTree = "<group>"; };
 		25CAAB5B261C53B5009FB26D /* RESTClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RESTClient.swift; sourceTree = "<group>"; };
 		25CAAB69261DBAFE009FB26D /* AppleTopicsTC.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = AppleTopicsTC.mlmodel; path = TrainingData/AppleTopicsTC.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -114,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				25B006362612129700E17748 /* ArticleView.swift */,
+				25C9BDA2262D8EDC007C8D8B /* ConsoleLogView.swift */,
 				25C49477260E309E00FD2758 /* FeedEntryView.swift */,
 				25C4945C260E1E2A00FD2758 /* FeedView.swift */,
 				25B0E57E261352B4006DBE5E /* ImageView.swift */,
@@ -139,9 +146,11 @@
 		25C49488260E4C9A00FD2758 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				25C9BD9D262D7DD7007C8D8B /* FavoritesHandler.swift */,
 				25C4947E260E495300FD2758 /* FeedTopicHelper.swift */,
 				25B0E57B2613524D006DBE5E /* ImageLoader.swift */,
 				25CAAB5B261C53B5009FB26D /* RESTClient.swift */,
+				25C9BDA6262DC32E007C8D8B /* StorageUtils.swift */,
 				25C4946A260E233900FD2758 /* XMLHelper.swift */,
 			);
 			path = Helpers;
@@ -217,13 +226,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25C9BDA3262D8EDC007C8D8B /* ConsoleLogView.swift in Sources */,
 				25CAAB6A261DBAFE009FB26D /* AppleTopicsTC.mlmodel in Sources */,
 				25CAAB5C261C53B5009FB26D /* RESTClient.swift in Sources */,
 				25B0E57F261352B4006DBE5E /* ImageView.swift in Sources */,
 				25C4945D260E1E2A00FD2758 /* FeedView.swift in Sources */,
 				25C49478260E309E00FD2758 /* FeedEntryView.swift in Sources */,
+				25C9BD9E262D7DD7007C8D8B /* FavoritesHandler.swift in Sources */,
 				25C49474260E2D1500FD2758 /* Feed.swift in Sources */,
 				25B0E57826132FEB006DBE5E /* ArticleViewModel.swift in Sources */,
+				25C9BDA7262DC32E007C8D8B /* StorageUtils.swift in Sources */,
 				25C4946B260E233900FD2758 /* XMLHelper.swift in Sources */,
 				25B0E57C2613524D006DBE5E /* ImageLoader.swift in Sources */,
 				25C49471260E2C2700FD2758 /* FeedViewModel.swift in Sources */,
