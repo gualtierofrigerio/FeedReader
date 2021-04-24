@@ -298,13 +298,13 @@ fileprivate class ParserAllTags:NSObject, XMLParserDelegate {
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
+        if string.starts(with: "\n") {
+            return
+        }
         if let _ = elementNameToGet {
             if currentElementName != "" {
                 addString(string, forKey: currentElementName)
             }
-            return
-        }
-        if string == "\n" {
             return
         }
         if let currentValue = currentDictionary[currentElementName] as? XMLElement {
