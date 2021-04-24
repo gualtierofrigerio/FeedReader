@@ -27,15 +27,18 @@ class SelectFeedViewModel: ObservableObject {
     // MARK: - Private
     
     private func loadEntries() {
-        let defaults = UserDefaults.standard
-        if let entriesArray = defaults.object(forKey: "feed_entries") as? [[String:String]] {
+        if let entriesArray = StorageUtils.loadFeedEntries() {
             feedList = FeedList.initWithArray(entriesArray)
+        }
+        if feedList.entries.contains(where: { entry in
+            entry.type == .favorites
+        }) == false {
+            feedList.addEntry(FeedListEntry(name: "Favorites", url: "", type: .favorites))
         }
     }
     
     private func saveEntries() {
-        let defaults = UserDefaults.standard
         let entries = feedList.toArray()
-        defaults.set(entries, forKey: "feed_entries")
+        StorageUtils.saveFeedEntries(entries)
     }
 }
