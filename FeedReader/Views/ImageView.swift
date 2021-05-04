@@ -10,7 +10,8 @@ import SwiftUI
 struct ImageView: View {
     @ObservedObject var imageLoader:ImageLoader
     var image:UIImage {
-        UIImage(data: imageLoader.data) ?? UIImage()
+        imageLoader.image
+        //UIImage(data: imageLoader.data) ?? UIImage()
     }
     
     
@@ -20,6 +21,16 @@ struct ImageView: View {
     }
     
     var body: some View {
+        Self.makeImageView(withImage: image)
+    }
+}
+
+extension ImageView {
+    static func empty() -> some View {
+        makeImageView(withImage: UIImage())
+    }
+    
+    static func makeImageView(withImage image:UIImage) -> some View {
         VStack {
             Image(uiImage: image)
                 .resizable()
