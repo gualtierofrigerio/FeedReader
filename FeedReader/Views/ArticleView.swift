@@ -62,7 +62,8 @@ struct WebKitView: UIViewRepresentable {
 
 fileprivate let testEntry = FeedEntry(title: "Title",
                                       urlString: "https://www.apple.com",
-                                      category: "")
+                                      category: "",
+                                      feedName: "Test")
 
 struct ArticleView_Previews: PreviewProvider {
     static var previews: some View {
