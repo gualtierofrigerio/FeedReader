@@ -16,18 +16,31 @@ struct FeedView: View {
                 Text("Feed empty")
             }
             else {
-                List(viewModel.feed.entries) { entry in
-                    Button {
-                        viewModel.userSelectedEntry(entry)
-                    } label: {
-                        FeedEntryView(entry:entry,
-                                      tapCategoryAction: {
-                                        tapCategoryAction(entry: entry)
-                                      },
-                                      toggleFavorite: {
-                                        viewModel.entryToggleFavorite(entry)
-                                      },
-                                      isFavorite: viewModel.entryIsFavorite(entry))
+                RefreshableView(action: {
+                    viewModel.refreshFeed(forceReload: true)
+                }) {
+                    if viewModel.showProgressView {
+                        VStack {
+                            ProgressView()
+                            Text("reloading feed...")
+                                .font(Font.caption2)
+                        }
+                    }
+                    ForEach(viewModel.feed.entries) { entry in
+                        Button {
+                            viewModel.userSelectedEntry(entry)
+                        } label: {
+                            FeedEntryView(entry:entry,
+                                          showFeedName: viewModel.showFeedNameInEntry,
+                                          tapCategoryAction: {
+                                            tapCategoryAction(entry: entry)
+                                          },
+                                          toggleFavorite: {
+                                            viewModel.entryToggleFavorite(entry)
+                                          },
+                                          isFavorite: viewModel.entryIsFavorite(entry))
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
             }
