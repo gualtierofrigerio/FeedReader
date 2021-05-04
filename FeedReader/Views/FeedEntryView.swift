@@ -9,6 +9,7 @@ import SwiftUI
 
 struct FeedEntryView: View {
     var entry:FeedEntry
+    var showFeedName:Bool
     var tapCategoryAction:() -> Void
     var toggleFavorite:() -> Void
     var isFavorite:Bool
@@ -18,12 +19,20 @@ struct FeedEntryView: View {
             if let url = entry.image {
                 ImageView(withURL: url)
             }
+            else {
+                ImageView.empty()
+            }
             VStack(alignment: .leading) {
                 Text(entry.title)
                 HStack {
                     Text(entry.category)
                         .font(Font.caption)
                         .foregroundColor(.secondary)
+                    if showFeedName {
+                        Text(entry.feedName)
+                            .font(Font.caption)
+                            .foregroundColor(.secondary)
+                    }
                     Spacer()
                     Button {
                         toggleFavorite()
@@ -41,10 +50,17 @@ struct FeedEntryView: View {
     }
 }
 
-fileprivate let testEntry = FeedEntry(title: "title", urlString: "https://test", category: "")
+fileprivate let testEntry = FeedEntry(title: "title",
+                                      urlString: "https://test",
+                                      category: "",
+                                      feedName: "Test")
 
 struct FeedEntryView_Previews: PreviewProvider {
     static var previews: some View {
-        FeedEntryView(entry:testEntry, tapCategoryAction:{}, toggleFavorite: {}, isFavorite: false)
+        FeedEntryView(entry:testEntry,
+                      showFeedName: false,
+                      tapCategoryAction:{},
+                      toggleFavorite: {},
+                      isFavorite: false)
     }
 }
