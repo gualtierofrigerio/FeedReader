@@ -11,12 +11,15 @@ import Foundation
 class FeedViewModel:ObservableObject {
     @Published var feed:Feed = Feed(entries: [])
     @Published var feedName = "Feed"
-    // selectedEntry is @Published so once we select an entry
-    // the SwiftUI view will reload and have access to showAlert and showSheet
     @Published var selectedArticleViewModel:ArticleViewModel?
     @Published var selectedArticleIsFavorite = false
     @Published var showAlert = false
+    @Published var showProgressView = false
     @Published var showSheet = false
+    
+    var showFeedNameInEntry: Bool {
+        type != .online
+    }
     
     
     var errorMessage:String = ""
@@ -25,13 +28,14 @@ class FeedViewModel:ObservableObject {
         FeedTopicHelper.classNames
     }()
     
+    
     init() {
         if let url = Bundle.main.url(forResource: "test", withExtension: "xml") {
             let xmlHelper = XMLHelper()
             let publisher = xmlHelper.parseXML(atURL: url, elementName: "item")
             cancellable = publisher.sink { xmlArray in
                 if let xmlArray = xmlArray {
-                    self.feed = Feed.createFromArray(xmlArray)
+                    self.feed = Feed.createFromArray(xmlArray, feedName:"Feed Name")
                 }
             }
         }
@@ -40,7 +44,7 @@ class FeedViewModel:ObservableObject {
     
     init(withURLString urlString:String) {
         if let url = URL(string: urlString) {
-            loadFromURL(url)
+            loadFromURL(url, feedName: "Feed Name")
         }
     }
     
@@ -51,8 +55,9 @@ class FeedViewModel:ObservableObject {
     init(withFeedEntry entry:FeedListEntry) {
         switch entry.type {
         case .online:
+            feedListEntry = entry
             if let url = URL(string: entry.url) {
-                loadFromURL(url)
+                loadFromURL(url, feedName: entry.name)
             }
         case .favorites:
             feed = Feed(entries: favoritesHandler.getFavoritesFeedEntries())
@@ -71,7 +76,25 @@ class FeedViewModel:ObservableObject {
     
     func entryToggleFavorite(_ entry:FeedEntry) {
         favoritesHandler.toggleFavorite(entry:entry)
-        refreshFeed()
+        refreshFeed(forceReload: false)
+    }
+    
+    func refreshFeed(forceReload:Bool) {
+        if type == .favorites {
+            feed = Feed(entries: favoritesHandler.getFavoritesFeedEntries())
+        }
+        else {
+            if forceReload {
+                showProgressView = true
+                if let entry = feedListEntry,
+                   let url = URL(string: entry.url) {
+                    loadFromURL(url, feedName: entry.name)
+                }
+            }
+            else {
+                objectWillChange.send()
+            }
+        }
     }
     
     func selectedArticleToggleFavorite() {
@@ -96,25 +119,20 @@ class FeedViewModel:ObservableObject {
     // MARK: - Private
     private var cancellable:AnyCancellable?
     private var favoritesHandler:FavoritesHandler = FavoritesHandler.shared
+    private var feedListEntry:FeedListEntry?
     private var feedTopicHelper = FeedTopicHelper()
     private var type:FeedListEntryType = .online
-    
-    private func loadFromURL(_ url:URL) {
+        
+    private func loadFromURL(_ url:URL, feedName:String) {
         let xmlHelper = XMLHelper()
         let publisher = xmlHelper.parseXML(atURL: url, elementName: "item")
         cancellable = publisher.sink { xmlArray in
             if let xmlArray = xmlArray {
-                self.feed = Feed.createFromArray(xmlArray)
+                self.feed = Feed.createFromArray(xmlArray, feedName: feedName)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.showProgressView = false
+                }
             }
-        }
-    }
-    
-    private func refreshFeed() {
-        if type == .favorites {
-            feed = Feed(entries: favoritesHandler.getFavoritesFeedEntries())
-        }
-        else {
-            objectWillChange.send()
         }
     }
 }
