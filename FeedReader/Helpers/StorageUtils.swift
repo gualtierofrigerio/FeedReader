@@ -66,10 +66,14 @@ extension FavoritesEntry {
            let category = dictionary["category"] else {
             return nil
         }
-        return FavoritesEntry(feed: feed, title: title, url: url, image: image, category: category)
+        return FavoritesEntry(feedName: feed,
+                              title: title,
+                              url: url,
+                              image: image,
+                              category: category)
     }
     
     func toDictionary() -> [String:String] {
-        ["feed" : feed, "title" : title, "url" : url, "image" : image, "category" : category]
+        ["feed" : feedName, "title" : title, "url" : url, "image" : image, "category" : category]
     }
 }

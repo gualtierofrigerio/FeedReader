@@ -12,7 +12,7 @@ struct Feed {
 }
 
 extension Feed {
-    static func createFromArray(_ array: [XMLDictionary]) -> Self {
+    static func createFromArray(_ array: [XMLDictionary], feedName:String) -> Self {
         let feedTopicHelper = FeedTopicHelper()
         var entries:[FeedEntry] = []
         for element in array {
@@ -21,7 +21,7 @@ extension Feed {
                 let title = elementTitle.value
                 let url = elementLink.value
                 let topic = feedTopicHelper.getTopic(forText: title) ?? ""
-                var entry = FeedEntry(title: title, urlString: url, category: topic)
+                var entry = FeedEntry(title: title, urlString: url, category: topic, feedName:feedName)
                 if let elementEnclosure = element["enclosure"] as? XMLElement,
                    let imageUrlString = elementEnclosure.attributes["url"] {
                     let imageUrl = URL(string: imageUrlString)
