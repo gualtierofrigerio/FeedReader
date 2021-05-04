@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2559431E2640263D007361EA /* RefreshableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2559431D2640263D007361EA /* RefreshableView.swift */; };
 		25B006372612129700E17748 /* ArticleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B006362612129700E17748 /* ArticleView.swift */; };
 		25B0E57826132FEB006DBE5E /* ArticleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B0E57726132FEB006DBE5E /* ArticleViewModel.swift */; };
 		25B0E57C2613524D006DBE5E /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25B0E57B2613524D006DBE5E /* ImageLoader.swift */; };
@@ -35,6 +36,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2559431D2640263D007361EA /* RefreshableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableView.swift; sourceTree = "<group>"; };
 		25B006362612129700E17748 /* ArticleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleView.swift; sourceTree = "<group>"; };
 		25B0E57726132FEB006DBE5E /* ArticleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewModel.swift; sourceTree = "<group>"; };
 		25B0E57B2613524D006DBE5E /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				25C49477260E309E00FD2758 /* FeedEntryView.swift */,
 				25C4945C260E1E2A00FD2758 /* FeedView.swift */,
 				25B0E57E261352B4006DBE5E /* ImageView.swift */,
+				2559431D2640263D007361EA /* RefreshableView.swift */,
 				25BABE6626288A6400D967F4 /* SelectFeed.swift */,
 			);
 			path = Views;
@@ -237,6 +240,7 @@
 				25B0E57826132FEB006DBE5E /* ArticleViewModel.swift in Sources */,
 				25C9BDA7262DC32E007C8D8B /* StorageUtils.swift in Sources */,
 				25C4946B260E233900FD2758 /* XMLHelper.swift in Sources */,
+				2559431E2640263D007361EA /* RefreshableView.swift in Sources */,
 				25B0E57C2613524D006DBE5E /* ImageLoader.swift in Sources */,
 				25C49471260E2C2700FD2758 /* FeedViewModel.swift in Sources */,
 				25C4947F260E495300FD2758 /* FeedTopicHelper.swift in Sources */,
