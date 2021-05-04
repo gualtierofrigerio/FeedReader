@@ -8,7 +8,7 @@
 import Foundation
 
 struct FavoritesEntry {
-    var feed:String
+    var feedName:String
     var title:String
     var url:String
     var image:String
@@ -18,7 +18,7 @@ struct FavoritesEntry {
 extension FavoritesEntry {
     static func fromFeedEntry(entry:FeedEntry) -> Self {
         let imageUrl = entry.image?.absoluteString ?? ""
-        return FavoritesEntry(feed: "",
+        return FavoritesEntry(feedName: entry.feedName,
                               title: entry.title,
                               url: entry.urlString,
                               image: imageUrl,
@@ -49,7 +49,8 @@ class FavoritesHandler {
             FeedEntry(title: $0.title,
                       urlString: $0.url,
                       category: $0.category,
-                      image: URL(string:$0.image))
+                      image: URL(string:$0.image),
+                      feedName: $0.feedName)
         }
     }
     
@@ -71,6 +72,7 @@ class FavoritesHandler {
         else {
             addToFavorites(entry:entry)
         }
+        saveFavorites()
     }
     
     // MARK: - Private
