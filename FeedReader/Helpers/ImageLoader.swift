@@ -15,6 +15,9 @@ class ImageLoader: ObservableObject {
             if let img = UIImage(data: newValue) {
                 image = img
                 loaded = true
+                if let urlString = loadingUrlString {
+                    imageCache.setImage(img, forUrl: urlString)
+                }
             }
         }
     }
@@ -26,12 +29,20 @@ class ImageLoader: ObservableObject {
     
     func load(urlString:String) {
         guard let url = URL(string: urlString) else { return }
-        loadImage(fromURL: url)
+        if let cachedImage = imageCache.imageForURL(urlString) {
+            image = cachedImage
+        }
+        else {
+            loadingUrlString = urlString
+            loadImage(fromURL: url)
+        }
     }
     
     // MARK: - Private
     private var cancellable:AnyCancellable?
+    private var imageCache = ImageCache.shared
     private var loaded = false
+    private var loadingUrlString:String?
     
     private func loadImage(fromURL url:URL) {
         if loaded == false {
