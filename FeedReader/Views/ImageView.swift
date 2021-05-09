@@ -11,7 +11,6 @@ struct ImageView: View {
     @ObservedObject var imageLoader:ImageLoader
     var image:UIImage {
         imageLoader.image
-        //UIImage(data: imageLoader.data) ?? UIImage()
     }
     
     
@@ -27,16 +26,16 @@ struct ImageView: View {
 
 extension ImageView {
     static func empty() -> some View {
-        makeImageView(withImage: UIImage())
+        Image(systemName: "newspaper")
+            .font(Font.largeTitle)
+            .padding()
     }
     
     static func makeImageView(withImage image:UIImage) -> some View {
-        VStack {
-            Image(uiImage: image)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width:100, height:100)
-        }
+        Image(uiImage: image)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width:100, height:100)
     }
 }
 
