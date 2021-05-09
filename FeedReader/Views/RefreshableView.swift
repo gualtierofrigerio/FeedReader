@@ -32,13 +32,16 @@ struct RefreshableView<Content:View>: View {
                     }
             }
             .onPreferenceChange(OffsetPreferenceKey.self) { offset in
-                refreshAction()
+                if offset > threshold {
+                    refreshAction()
+                }
             }
         }
     }
     
     private var content: () -> Content
     private var refreshAction: () -> Void
+    private let threshold:CGFloat = 50.0
 }
 
 struct RefreshableView_Previews: PreviewProvider {
