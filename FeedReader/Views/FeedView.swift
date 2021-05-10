@@ -27,20 +27,7 @@ struct FeedView: View {
                         }
                     }
                     ForEach(viewModel.feed.entries) { entry in
-                        Button {
-                            viewModel.userSelectedEntry(entry)
-                        } label: {
-                            FeedEntryView(entry:entry,
-                                          showFeedName: viewModel.showFeedNameInEntry,
-                                          tapCategoryAction: {
-                                            tapCategoryAction(entry: entry)
-                                          },
-                                          toggleFavorite: {
-                                            viewModel.entryToggleFavorite(entry)
-                                          },
-                                          isFavorite: viewModel.entryIsFavorite(entry))
-                        }
-                        .buttonStyle(PlainButtonStyle())
+                        viewForEntry(entry)
                     }
                 }
             }
@@ -103,6 +90,23 @@ struct FeedView: View {
     private func tapCategoryAction(entry:FeedEntry) {
         showCategoryPicker.toggle()
         selectedEntry = entry
+    }
+    
+    @ViewBuilder private func viewForEntry(_ entry: FeedEntry) -> some View {
+        Button {
+            viewModel.userSelectedEntry(entry)
+        } label: {
+            FeedEntryView(entry:entry,
+                          showFeedName: viewModel.showFeedNameInEntry,
+                          tapCategoryAction: {
+                            tapCategoryAction(entry: entry)
+                          },
+                          toggleFavorite: {
+                            viewModel.entryToggleFavorite(entry)
+                          },
+                          isFavorite: viewModel.entryIsFavorite(entry))
+        }
+        .buttonStyle(PlainButtonStyle())
     }
 }
 
