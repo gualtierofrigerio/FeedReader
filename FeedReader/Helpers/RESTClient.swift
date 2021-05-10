@@ -21,4 +21,17 @@ class RESTClient {
             }
             .eraseToAnyPublisher()
     }
+    
+    class func loadData(atURL url:URL, completion: @escaping (Result<Data, Error>) -> Void) {
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            if let data = data {
+                completion(.success(data))
+            }
+        }
+        task.resume()
+    }
 }
