@@ -7,17 +7,7 @@
 
 import SwiftUI
 
-struct OffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
-}
-
 struct RefreshableView<Content:View>: View {
-    
-    
     init(action: @escaping () -> Void, @ViewBuilder content: @escaping () -> Content) {
         self.content = content
         self.refreshAction = action
@@ -39,9 +29,18 @@ struct RefreshableView<Content:View>: View {
         }
     }
     
+    
     private var content: () -> Content
     private var refreshAction: () -> Void
     private let threshold:CGFloat = 50.0
+}
+
+fileprivate struct OffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
 }
 
 struct RefreshableView_Previews: PreviewProvider {
