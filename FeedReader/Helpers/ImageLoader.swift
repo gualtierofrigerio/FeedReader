@@ -23,7 +23,6 @@ class ImageLoader: ObservableObject {
     
     // MARK: - Private
     private var imageCache = ImageCache.shared
-    private var loaded = false
     
     private func loadImage(fromURL url:URL) {
         imageCache.imageForURL(url) { image in
