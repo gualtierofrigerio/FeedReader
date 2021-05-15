@@ -18,7 +18,7 @@ struct SelectFeed: View {
                 Text("Add new feed")
                     .padding()
                 Button {
-                    showSheet.toggle()
+                    viewModel.tapOnNewFeed()
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -36,6 +36,8 @@ struct SelectFeed: View {
                                 Image(systemName: "network")
                             case .favorites:
                                 Image(systemName: "heart")
+                            case .aggregated:
+                                Image(systemName: "a.circle")
                             }
                         }
                     }
@@ -45,27 +47,13 @@ struct SelectFeed: View {
             NavigationLink(destination: dynamicDestination(), isActive: $enableDynamicDestination) {}
         }
         .navigationBarTitle("Your feeds")
-        .sheet(isPresented: $showSheet, onDismiss: clearNewFeedEntries) {
+        .sheet(isPresented: $viewModel.showNewFeedView) {
             sheetAddFeed
         }
     }
     
     @State private var enableDynamicDestination = false
-    @State private var newFeedName = ""
-    @State private var newFeedURL = ""
     @State private var selectedEntry:FeedListEntry?
-    @State private var showSheet = false
-    
-    private func addEntry() {
-        viewModel.addEntry(name: newFeedName, url: newFeedURL)
-        showSheet = false
-        clearNewFeedEntries()
-    }
-    
-    private func clearNewFeedEntries() {
-        newFeedName = ""
-        newFeedURL = ""
-    }
     
     private func deleteElement(at offset:IndexSet) {
         viewModel.removeEntry(offset:offset)
@@ -94,19 +82,6 @@ struct SelectFeed: View {
     
     // MARK: - Add feed
     private var sheetAddFeed: some View {
-        NavigationView {
-            VStack {
-                Form {
-                    TextField("Name", text: $newFeedName)
-                    TextField("URL", text: $newFeedURL)
-                }
-                Button {
-                    addEntry()
-                } label: {
-                    Text("Confirm")
-                }
-            }
-            .navigationTitle("Add new feed")
-        }
+        AddNewFeed(viewModel: viewModel)
     }
 }
