@@ -62,6 +62,8 @@ class FeedViewModel:ObservableObject {
         case .favorites:
             feed = Feed(entries: favoritesHandler.getFavoritesFeedEntries())
             type = .favorites
+        case .aggregated(let feeds):
+            print("TODO")
         }
         feedName = entry.name
     }
