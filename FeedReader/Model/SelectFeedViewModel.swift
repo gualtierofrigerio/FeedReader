@@ -8,7 +8,10 @@
 import Foundation
 
 class SelectFeedViewModel: ObservableObject {
+    @Published var aggregatedButtonDisabled = true
     @Published var feedList:FeedList = FeedList(entries: [])
+    @Published var selectedFeedEntries:[SelectedListEntry] = []
+    @Published var showNewFeedView = false
     
     init() {
         loadEntries()
@@ -19,9 +22,42 @@ class SelectFeedViewModel: ObservableObject {
         saveEntries()
     }
     
+    func clearSelectedEntries() {
+        selectedFeedEntries = feedList.entries.filter({
+            $0.type == .online
+        })
+        .map {
+            SelectedListEntry(name:$0.name, selected: false)
+        }
+    }
+    
     func removeEntry(offset:IndexSet) {
         feedList.entries.remove(atOffsets: offset)
         saveEntries()
+    }
+    
+    func tapOnNewFeed() {
+        showNewFeedView = true
+        clearSelectedEntries()
+    }
+    
+    func toggleSelectedEntry(name:String) {
+        if let index = selectedFeedEntries.firstIndex(where: {
+            $0.name == name
+        }) {
+            var entry = selectedFeedEntries[index]
+            entry.selected.toggle()
+            selectedFeedEntries[index] = entry
+        }
+        
+        if let _ = selectedFeedEntries.first(where: {
+            $0.selected == true
+        }) {
+            aggregatedButtonDisabled = false
+        }
+        else {
+            aggregatedButtonDisabled = true
+        }
     }
     
     // MARK: - Private
@@ -41,4 +77,9 @@ class SelectFeedViewModel: ObservableObject {
         let entries = feedList.toArray()
         StorageUtils.saveFeedEntries(entries)
     }
+}
+
+struct SelectedListEntry {
+    var name:String
+    var selected:Bool
 }
