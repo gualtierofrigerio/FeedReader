@@ -53,19 +53,9 @@ class FeedViewModel:ObservableObject {
     }
     
     init(withFeedEntry entry:FeedListEntry) {
-        switch entry.type {
-        case .online:
-            feedListEntry = entry
-            if let url = URL(string: entry.url) {
-                loadFromURL(url, feedName: entry.name)
-            }
-        case .favorites:
-            feed = Feed(entries: favoritesHandler.getFavoritesFeedEntries())
-            type = .favorites
-        case .aggregated(let feeds):
-            print("TODO")
-        }
+        feedListEntry = entry
         feedName = entry.name
+        loadFeedListEntry(entry)
     }
     
     func closeSheet() {
@@ -82,15 +72,18 @@ class FeedViewModel:ObservableObject {
     }
     
     func refreshFeed(forceReload:Bool) {
+        if isReloading {
+            return
+        }
         if type == .favorites {
             feed = Feed(entries: favoritesHandler.getFavoritesFeedEntries())
         }
         else {
             if forceReload {
-                showProgressView = true
-                if let entry = feedListEntry,
-                   let url = URL(string: entry.url) {
-                    loadFromURL(url, feedName: entry.name)
+                if let entry = feedListEntry {
+                    showProgressView = true
+                    isReloading = true
+                    loadFeedListEntry(entry)
                 }
             }
             else {
@@ -123,7 +116,52 @@ class FeedViewModel:ObservableObject {
     private var favoritesHandler:FavoritesHandler = FavoritesHandler.shared
     private var feedListEntry:FeedListEntry?
     private var feedTopicHelper = FeedTopicHelper()
+    private var isReloading = false
     private var type:FeedListEntryType = .online
+    
+    private func loadEntriesFromURL(_ url:URL, feedName:String) -> AnyPublisher<[FeedEntry], Never> {
+        let xmlHelper = XMLHelper()
+        return xmlHelper.parseXML(atURL: url, elementName: "item")
+        .map {
+            Feed.feedEntriesFromArray($0 ?? [], feedName: feedName)
+        }.eraseToAnyPublisher()
+    }
+    
+    private func loadFeedListEntry(_ entry:FeedListEntry) {
+        switch entry.type {
+        case .online:
+            if let url = URL(string: entry.url) {
+                loadFromURL(url, feedName: entry.name)
+            }
+        case .favorites:
+            feed = Feed(entries: favoritesHandler.getFavoritesFeedEntries())
+            type = .favorites
+        case .aggregated:
+            type = .aggregated
+            if let aggregated = entry.aggregated {
+                loadFromAggregatedEntries(aggregated)
+            }
+        }
+    }
+    
+    private func loadFromAggregatedEntries(_ entries:[FeedListEntry]) {
+        var publishers:[AnyPublisher<[FeedEntry], Never>] = []
+        for aggregatedEntry in entries {
+            if let url = URL(string: aggregatedEntry.url) {
+                publishers.append(loadEntriesFromURL(url, feedName: aggregatedEntry.name))
+            }
+        }
+        cancellable = Publishers.MergeMany(publishers)
+            .collect(publishers.count)
+            .sink(receiveValue: { allEntries in
+                self.feed = Feed.init(entries: allEntries.flatMap { $0 })
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.showProgressView = false
+                    self.isReloading = false
+            }
+            
+        })
+    }
         
     private func loadFromURL(_ url:URL, feedName:String) {
         let xmlHelper = XMLHelper()
@@ -133,6 +171,7 @@ class FeedViewModel:ObservableObject {
                 self.feed = Feed.createFromArray(xmlArray, feedName: feedName)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.showProgressView = false
+                    self.isReloading = false
                 }
             }
         }
