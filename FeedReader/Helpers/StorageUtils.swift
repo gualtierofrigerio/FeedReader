@@ -7,7 +7,7 @@
 
 import Foundation
 
-typealias ArrayDictionaryStrings = [[String:String]]
+typealias ArrayDictionaryStrings = [[String:Any]]
 
 class StorageUtils {
     static func loadFavorites() -> [FavoritesEntry]? {
@@ -45,7 +45,7 @@ class StorageUtils {
     
     private static func loadArray(key: String) -> ArrayDictionaryStrings? {
         let defaults = UserDefaults.standard
-        if let array = defaults.object(forKey: key) as? [[String:String]] {
+        if let array = defaults.object(forKey: key) as? [[String:Any]] {
             return array
         }
         return nil
@@ -58,12 +58,12 @@ class StorageUtils {
 }
 
 extension FavoritesEntry {
-    static func fromDictionary(_ dictionary:[String:String]) -> Self? {
-        guard let feed = dictionary["feed"],
-           let title = dictionary["title"],
-           let url = dictionary["url"],
-           let image = dictionary["image"],
-           let category = dictionary["category"] else {
+    static func fromDictionary(_ dictionary:[String:Any]) -> Self? {
+        guard let feed = dictionary["feed"] as? String,
+           let title = dictionary["title"] as? String,
+           let url = dictionary["url"] as? String,
+           let image = dictionary["image"] as? String,
+           let category = dictionary["category"] as? String else {
             return nil
         }
         return FavoritesEntry(feedName: feed,

@@ -12,14 +12,14 @@ struct FeedList {
 }
 
 extension FeedList {
-    static func initWithArray(_ array:[[String:String]]) -> Self {
+    static func initWithArray(_ array:[[String:Any]]) -> Self {
         let entries = array.compactMap({ element in
             FeedListEntry.initWithDictionary(element)
         })
         return FeedList(entries: entries)
     }
     
-    func toArray() -> [[String:String]] {
+    func toArray() -> [[String:Any]] {
         entries.map {$0.toDictionary()}
     }
 }
