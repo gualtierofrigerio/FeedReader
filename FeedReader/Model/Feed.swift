@@ -13,6 +13,11 @@ struct Feed {
 
 extension Feed {
     static func createFromArray(_ array: [XMLDictionary], feedName:String) -> Self {
+        let entries = feedEntriesFromArray(array, feedName: feedName)
+        return Feed(entries: entries)
+    }
+    
+    static func feedEntriesFromArray(_ array: [XMLDictionary], feedName:String) -> [FeedEntry] {
         let feedTopicHelper = FeedTopicHelper()
         var entries:[FeedEntry] = []
         for element in array {
@@ -31,7 +36,7 @@ extension Feed {
                 entries.append(entry)
             }
         }
-        return Feed(entries: entries)
+        return entries
     }
 }
 
