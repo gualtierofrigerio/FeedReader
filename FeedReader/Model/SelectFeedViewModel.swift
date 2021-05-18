@@ -10,6 +10,11 @@ import Foundation
 class SelectFeedViewModel: ObservableObject {
     @Published var aggregatedButtonDisabled = true
     @Published var feedList:FeedList = FeedList(entries: [])
+    @Published var newAggregatedFeedName = "" {
+        didSet {
+            updateAggregatedButtonState()
+        }
+    }
     @Published var selectedFeedEntries:[SelectedListEntry] = []
     @Published var showNewFeedView = false
     
@@ -20,6 +25,22 @@ class SelectFeedViewModel: ObservableObject {
     func addEntry(name: String, url: String) {
         feedList.addEntry(FeedListEntry(name: name, url: url, type: .online))
         saveEntries()
+        showNewFeedView = false
+    }
+    
+    func addAggregatedEntries() {
+        let aggregated = feedList.entries.filter { entry in
+            if let _ = selectedFeedEntries.first(where: {$0.name == entry.name && $0.selected}) {
+                return true
+            }
+            return false
+        }
+        feedList.addEntry(FeedListEntry(name: newAggregatedFeedName,
+                                        url: "",
+                                        type: .aggregated,
+                                        aggregated: aggregated))
+        saveEntries()
+        showNewFeedView = false
     }
     
     func clearSelectedEntries() {
@@ -49,11 +70,19 @@ class SelectFeedViewModel: ObservableObject {
             entry.selected.toggle()
             selectedFeedEntries[index] = entry
         }
-        
-        if let _ = selectedFeedEntries.first(where: {
-            $0.selected == true
-        }) {
-            aggregatedButtonDisabled = false
+        updateAggregatedButtonState()
+    }
+    
+    func updateAggregatedButtonState() {
+        if newAggregatedFeedName.count > 0 {
+            if let _ = selectedFeedEntries.first(where: {
+                $0.selected == true
+            }) {
+                aggregatedButtonDisabled = false
+            }
+            else {
+                aggregatedButtonDisabled = true
+            }
         }
         else {
             aggregatedButtonDisabled = true
@@ -77,9 +106,11 @@ class SelectFeedViewModel: ObservableObject {
         let entries = feedList.toArray()
         StorageUtils.saveFeedEntries(entries)
     }
+    
+    struct SelectedListEntry {
+        var name:String
+        var selected:Bool
+    }
 }
 
-struct SelectedListEntry {
-    var name:String
-    var selected:Bool
-}
+

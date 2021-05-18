@@ -7,60 +7,43 @@
 
 import Foundation
 
-indirect enum FeedListEntryType: Equatable {
-    case online
-    case favorites
-    case aggregated([FeedListEntryType])
-}
-
-extension FeedListEntryType: CustomStringConvertible {
-    var description: String {
-        switch self {
-        case .online:
-            return "online"
-        case .favorites:
-            return "favorites"
-        case .aggregated:
-            return "aggregated"
-        }
-    }
-}
-
-extension FeedListEntryType {
-    static func fromString(_ string:String) -> Self? {
-        switch string {
-        case "online":
-            return .online
-        case "favorites":
-            return .favorites
-        case "aggregated":
-            return .aggregated([])
-        default:
-            return nil
-        }
-    }
+enum FeedListEntryType: String {
+    case online = "online"
+    case favorites = "favorites"
+    case aggregated = "aggregated"
 }
 
 struct FeedListEntry {
     var name:String
     var url:String
     var type:FeedListEntryType
+    var aggregated:[FeedListEntry]?
 }
 
 extension FeedListEntry {
-    static func initWithDictionary(_ dictionary:[String:String]) -> Self? {
-        guard let name = dictionary["name"],
-              let url = dictionary["url"],
-              let type = dictionary["type"] else { return nil }
+    static func initWithDictionary(_ dictionary:[String:Any]) -> Self? {
+        guard let name = dictionary["name"] as? String,
+              let url = dictionary["url"] as? String,
+              let type = dictionary["type"] as? String else { return nil }
         
         var entryType = FeedListEntryType.online
-        if let typeFromString = FeedListEntryType.fromString(type) {
+        if let typeFromString = FeedListEntryType(rawValue: type) {
             entryType = typeFromString
         }
-        return FeedListEntry(name: name, url: url, type: entryType)
+        var aggregated:[FeedListEntry] = []
+        if let aggr = dictionary["aggregated"] as? [[String:Any]] {
+            aggregated = aggr.compactMap {
+                FeedListEntry.initWithDictionary($0)
+            }
+        }
+        return FeedListEntry(name: name, url: url, type: entryType, aggregated: aggregated)
     }
     
-    func toDictionary() -> [String:String] {
-        ["name" : name, "url" : url, "type" : type.description]
+    func toDictionary() -> [String:Any] {
+        var aggregatedArray:[[String:Any]] = []
+        if let agr = aggregated {
+            aggregatedArray = agr.map{ $0.toDictionary() }
+        }
+        return ["name" : name, "url" : url, "type" : type.rawValue, "aggregated" : aggregatedArray] as [String : Any]
     }
 }

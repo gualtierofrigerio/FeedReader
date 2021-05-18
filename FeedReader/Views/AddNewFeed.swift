@@ -33,6 +33,7 @@ struct AddNewFeed: View {
                 .font(Font.headline)
                 .padding()
             Form {
+                TextField("Name", text: $viewModel.newAggregatedFeedName)
                 List {
                     ForEach(viewModel.selectedFeedEntries, id: \.name) { entry in
                         Button {
@@ -54,7 +55,7 @@ struct AddNewFeed: View {
                 }
             }
             Button {
-                print("confirm")
+                viewModel.addAggregatedEntries()
             } label: {
                 Text("Add aggregated")
             }.disabled(viewModel.aggregatedButtonDisabled)
@@ -64,6 +65,10 @@ struct AddNewFeed: View {
     // MARK: - Private
     @State private var newFeedName = ""
     @State private var newFeedURL = ""
+    
+    private func addAggregatedEntry() {
+        viewModel.addAggregatedEntries()
+    }
     
     private func addEntry() {
         viewModel.addEntry(name: newFeedName, url: newFeedURL)
