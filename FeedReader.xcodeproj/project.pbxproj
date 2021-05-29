@@ -18,6 +18,7 @@
 		25BABE6A26288B8E00D967F4 /* FeedList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BABE6926288B8E00D967F4 /* FeedList.swift */; };
 		25BABE6D26288D0100D967F4 /* SelectFeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BABE6C26288D0100D967F4 /* SelectFeedViewModel.swift */; };
 		25BEF231264EBF7A002BC41C /* AddNewFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BEF230264EBF7A002BC41C /* AddNewFeed.swift */; };
+		25C20FC4266123C100E5FC0D /* ViewWithActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C20FC3266123C100E5FC0D /* ViewWithActivityIndicator.swift */; };
 		25C4945B260E1E2A00FD2758 /* FeedReaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C4945A260E1E2A00FD2758 /* FeedReaderApp.swift */; };
 		25C4945D260E1E2A00FD2758 /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C4945C260E1E2A00FD2758 /* FeedView.swift */; };
 		25C4945F260E1E2C00FD2758 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 25C4945E260E1E2C00FD2758 /* Assets.xcassets */; };
@@ -48,6 +49,7 @@
 		25BABE6926288B8E00D967F4 /* FeedList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedList.swift; sourceTree = "<group>"; };
 		25BABE6C26288D0100D967F4 /* SelectFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFeedViewModel.swift; sourceTree = "<group>"; };
 		25BEF230264EBF7A002BC41C /* AddNewFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewFeed.swift; sourceTree = "<group>"; };
+		25C20FC3266123C100E5FC0D /* ViewWithActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewWithActivityIndicator.swift; sourceTree = "<group>"; };
 		25C49457260E1E2A00FD2758 /* FeedReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FeedReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25C4945A260E1E2A00FD2758 /* FeedReaderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedReaderApp.swift; sourceTree = "<group>"; };
 		25C4945C260E1E2A00FD2758 /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				25B0E57E261352B4006DBE5E /* ImageView.swift */,
 				2559431D2640263D007361EA /* RefreshableView.swift */,
 				25BABE6626288A6400D967F4 /* SelectFeed.swift */,
+				25C20FC3266123C100E5FC0D /* ViewWithActivityIndicator.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -243,6 +246,7 @@
 				25C9BDA7262DC32E007C8D8B /* StorageUtils.swift in Sources */,
 				25C4946B260E233900FD2758 /* XMLHelper.swift in Sources */,
 				2559431E2640263D007361EA /* RefreshableView.swift in Sources */,
+				25C20FC4266123C100E5FC0D /* ViewWithActivityIndicator.swift in Sources */,
 				25B0E57C2613524D006DBE5E /* ImageLoader.swift in Sources */,
 				25C49471260E2C2700FD2758 /* FeedViewModel.swift in Sources */,
 				25C4947F260E495300FD2758 /* FeedTopicHelper.swift in Sources */,
