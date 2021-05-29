@@ -44,8 +44,11 @@ struct SelectFeed: View {
                 }
                 .onDelete(perform:deleteElement)
             }
-            NavigationLink(destination: dynamicDestination(), isActive: $enableDynamicDestination) {}
+            if enableDynamicDestination {
+                NavigationLink(destination: dynamicDestination(), isActive: $enableDynamicDestination) {}
+            }
         }
+        .modifier(ActivityIndicatorModifier(showActivityIndicator: $showActivityIndicator))
         .navigationBarTitle("Your feeds")
         .sheet(isPresented: $viewModel.showNewFeedView) {
             sheetAddFeed
@@ -53,7 +56,9 @@ struct SelectFeed: View {
     }
     
     @State private var enableDynamicDestination = false
+    @State private var nextFeedView: FeedView?
     @State private var selectedEntry:FeedListEntry?
+    @State private var showActivityIndicator = false
     
     private func deleteElement(at offset:IndexSet) {
         viewModel.removeEntry(offset:offset)
@@ -62,7 +67,10 @@ struct SelectFeed: View {
     // MARK: - Dynamic built destination
     
     @ViewBuilder private func dynamicDestination() -> some View {
-        if let selectedEntry = selectedEntry {
+        if let nextView = nextFeedView {
+            nextView
+        }
+        else if let selectedEntry = selectedEntry {
             feedViewForEntry(selectedEntry)
         }
         else {
@@ -70,14 +78,23 @@ struct SelectFeed: View {
         }
     }
     
-    private func feedViewForEntry(_ entry:FeedListEntry) -> some View {
+    private func feedViewForEntry(_ entry:FeedListEntry) -> FeedView {
         let feedViewModel = FeedViewModel(withFeedEntry: entry)
-        return FeedView(viewModel: feedViewModel)
+        let feedView = FeedView(viewModel: feedViewModel)
+        return feedView
     }
     
     private func selectFeedEntry(_ entry:FeedListEntry) {
         selectedEntry = entry
-        enableDynamicDestination = true
+        showActivityIndicator = true
+        DispatchQueue.global().async {
+            let nextView = feedViewForEntry(entry)
+            self.nextFeedView = nextView
+            DispatchQueue.main.async {
+                enableDynamicDestination = true
+                showActivityIndicator = false
+            }
+        }
     }
     
     // MARK: - Add feed
