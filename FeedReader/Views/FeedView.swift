@@ -16,18 +16,28 @@ struct FeedView: View {
                 Text("Feed empty")
             }
             else {
-                RefreshableView(action: {
-                    viewModel.refreshFeed(forceReload: true)
-                }) {
-                    if viewModel.showProgressView {
-                        VStack {
-                            ProgressView()
-                            Text("reloading feed...")
-                                .font(Font.caption2)
-                        }
-                    }
-                    ForEach(viewModel.feed.entries) { entry in
+                if #available(iOS 15.0, *) {
+                    List(viewModel.feed.entries) { entry in
                         viewForEntry(entry)
+                    }
+                    .refreshable {
+                        viewModel.refreshFeed(forceReload: true)
+                    }
+                }
+                else {
+                    RefreshableView(action: {
+                        viewModel.refreshFeed(forceReload: true)
+                    }) {
+                        if viewModel.showProgressView {
+                            VStack {
+                                ProgressView()
+                                Text("reloading feed...")
+                                    .font(Font.caption2)
+                            }
+                        }
+                        ForEach(viewModel.feed.entries) { entry in
+                            viewForEntry(entry)
+                        }
                     }
                 }
             }
