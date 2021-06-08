@@ -24,6 +24,18 @@ class ImageCache {
         }
     }
     
+    @available(iOS 15.0, *)
+    func imageForURLAsync(_ url: URL) async -> UIImage? {
+        if let cachedImage = cache.first(where: { record in
+            record.urlString == url.absoluteString
+        }) {
+            return cachedImage.image
+        }
+        else {
+            return await loadImageAsync(url:url)
+        }
+    }
+    
     // MARK: - Private
     private var cache:[ImageCacheRecord] = []
     private let cacheSize = 10
@@ -47,6 +59,21 @@ class ImageCache {
                 completion(nil)
             }
         }
+    }
+    
+    @available(iOS 15.0, *)
+    private func loadImageAsync(url: URL) async -> UIImage? {
+        let result = await RESTClient.loadDataAsync(url: url)
+        switch result {
+        case .success(let data):
+            if let image = self.imageFromData(data) {
+                self.setImage(image, forUrl: url.absoluteString)
+                return image
+            }
+        case .failure(_ ):
+            print("error while loading image")
+        }
+        return nil
     }
     
     private func setImage(_ image:UIImage, forUrl url:String) {

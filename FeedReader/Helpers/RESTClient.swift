@@ -34,4 +34,14 @@ class RESTClient {
         }
         task.resume()
     }
+    
+    @available(iOS 15.0, *)
+    class func loadDataAsync(url: URL) async -> Result<Data, Error> {
+        let request = URLRequest(url: url)
+        guard let data = try? await URLSession.shared.data(for: request,
+                                                           delegate: nil)  else {
+            return .failure(RESTClientError.generic("error while requesting url"))
+        }
+        return .success(data.0)
+    }
 }
