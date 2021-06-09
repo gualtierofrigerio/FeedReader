@@ -21,7 +21,7 @@ struct FeedView: View {
                         viewForEntry(entry)
                     }
                     .refreshable {
-                        viewModel.refreshFeed(forceReload: true)
+                        await viewModel.refreshFeedAsync(forceReload: true)
                     }
                 }
                 else {

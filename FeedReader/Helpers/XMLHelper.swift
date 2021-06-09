@@ -55,6 +55,15 @@ class XMLHelper:NSObject {
         parser.parse()
     }
     
+    @available(iOS 15.0, *)
+    func parseXML(atURL url: URL, elementName: String) async -> Array<XMLDictionary>? {
+        guard let data = try? Data(contentsOf: url) else {
+            return nil
+        }
+        let array = await parseXML(data: data, elementName: elementName)
+        return array
+    }
+    
     @available(iOS 13.0, *)
     func parseXML(atURL url:URL) -> AnyPublisher<XMLDictionary?, Never> {
         let subject = CurrentValueSubject<XMLDictionary?, Never>(nil)
@@ -89,6 +98,15 @@ class XMLHelper:NSObject {
             subject.send(arrayDictionary)
         }
         return subject.eraseToAnyPublisher()
+    }
+    
+    @available(iOS 15.0, *)
+    func parseXML(data: Data, elementName: String) async -> Array<XMLDictionary>? {
+        return await withCheckedContinuation { continuation in
+            parseXML(data:data, elementName: elementName) { arrayDictionary in
+                continuation.resume(returning: arrayDictionary)
+            }
+        }
     }
     
     // MARK: - Private

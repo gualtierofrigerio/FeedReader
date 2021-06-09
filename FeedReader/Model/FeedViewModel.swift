@@ -92,6 +92,24 @@ class FeedViewModel:ObservableObject {
         }
     }
     
+    @available(iOS 15.0, *)
+    func refreshFeedAsync(forceReload: Bool) async {
+        if isReloading {
+            return
+        }
+        if type == .favorites {
+            feed = Feed(entries: favoritesHandler.getFavoritesFeedEntries())
+        }
+        else {
+            if forceReload {
+                if let entry = feedListEntry,
+                   let feed = await loadFeedFromListEntry(entry) {
+                    self.feed = feed
+                }
+            }
+        }
+    }
+    
     func selectedArticleToggleFavorite() {
         guard let selectedArticleViewModel = selectedArticleViewModel else { return }
         let article = selectedArticleViewModel.article
@@ -127,6 +145,35 @@ class FeedViewModel:ObservableObject {
         }.eraseToAnyPublisher()
     }
     
+    @available(iOS 15.0, *)
+    private func loadEntriesFromURL(_ url: URL, feedName: String) async -> [FeedEntry]? {
+        let xmlHelper = XMLHelper()
+        if let array = await xmlHelper.parseXML(atURL: url, elementName: "item") {
+            return Feed.feedEntriesFromArray(array, feedName: feedName)
+        }
+        return nil
+    }
+    
+    @available(iOS 15.0, *)
+    private func loadFeedFromListEntry(_ entry: FeedListEntry) async -> Feed? {
+        var feed: Feed? = nil
+        switch entry.type {
+        case .online:
+            if let url = URL(string: entry.url) {
+                feed = await loadFeedFromURL(url, feedName: entry.name)
+            }
+        case .favorites:
+            feed = Feed(entries: favoritesHandler.getFavoritesFeedEntries())
+            type = .favorites
+        case .aggregated:
+            type = .aggregated
+            if let aggregated = entry.aggregated {
+                feed = await loadFeedFromAggregatedEntries(aggregated)
+            }
+        }
+        return feed
+    }
+    
     private func loadFeedListEntry(_ entry:FeedListEntry) {
         switch entry.type {
         case .online:
@@ -142,6 +189,18 @@ class FeedViewModel:ObservableObject {
                 loadFromAggregatedEntries(aggregated)
             }
         }
+    }
+    
+    @available(iOS 15.0, *)
+    private func loadFeedFromAggregatedEntries(_ entries: [FeedListEntry]) async -> Feed? {
+        var allEntries: [FeedEntry] = []
+        for aggregatedEntry in entries {
+            if let url = URL(string: aggregatedEntry.url),
+               let entries = await loadEntriesFromURL(url, feedName: feedName) {
+                allEntries.append(contentsOf: entries)
+            }
+        }
+        return Feed.init(entries: allEntries)
     }
     
     private func loadFromAggregatedEntries(_ entries:[FeedListEntry]) {
@@ -175,5 +234,14 @@ class FeedViewModel:ObservableObject {
                 }
             }
         }
+    }
+    
+    @available(iOS 15.0, *)
+    private func loadFeedFromURL(_ url: URL, feedName: String) async -> Feed? {
+        let xmlHelper = XMLHelper()
+        if let xmlArray = await xmlHelper.parseXML(atURL: url, elementName: "item") {
+            return Feed.createFromArray(xmlArray, feedName: feedName)
+        }
+        return nil
     }
 }
