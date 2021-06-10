@@ -12,6 +12,20 @@ struct Feed {
 }
 
 extension Feed {
+    func filterEntries(text: String) -> [FeedEntry] {
+        if text.count < 3 {
+            return entries
+        }
+        let searchText = text.lowercased()
+        let filtered = entries.filter {
+            $0.title.lowercased().contains(searchText) ||
+            $0.category.lowercased().contains(searchText)
+        }
+        return filtered
+    }
+}
+
+extension Feed {
     static func createFromArray(_ array: [XMLDictionary], feedName:String) -> Self {
         let entries = feedEntriesFromArray(array, feedName: feedName)
         return Feed(entries: entries)
