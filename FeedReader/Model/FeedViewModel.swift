@@ -10,7 +10,9 @@ import Foundation
 
 class FeedViewModel:ObservableObject {
     @Published var feed:Feed = Feed(entries: [])
+    @Published var feedEntries: [FeedEntry] = []
     @Published var feedName = "Feed"
+    @Published var searchText = ""
     @Published var selectedArticleViewModel:ArticleViewModel?
     @Published var selectedArticleIsFavorite = false
     @Published var showAlert = false
@@ -50,12 +52,14 @@ class FeedViewModel:ObservableObject {
     
     init(withEntries entries:[FeedEntry], title:String) {
         self.feed = Feed(entries: entries)
+        configureSearch()
     }
     
     init(withFeedEntry entry:FeedListEntry) {
         feedListEntry = entry
         feedName = entry.name
         loadFeedListEntry(entry)
+        configureSearch()
     }
     
     func closeSheet() {
@@ -135,7 +139,21 @@ class FeedViewModel:ObservableObject {
     private var feedListEntry:FeedListEntry?
     private var feedTopicHelper = FeedTopicHelper()
     private var isReloading = false
+    private var searchCancellable: AnyCancellable?
     private var type:FeedListEntryType = .online
+    
+    private func configureSearch() {
+        searchCancellable = $searchText
+            .debounce(for: .milliseconds(500), scheduler: RunLoop.main)
+            .removeDuplicates()
+            .sink { text in
+                self.filterFeed(text:text)
+            }
+    }
+    
+    private func filterFeed(text: String) {
+        feedEntries = feed.filterEntries(text: text)
+    }
     
     private func loadEntriesFromURL(_ url:URL, feedName:String) -> AnyPublisher<[FeedEntry], Never> {
         let xmlHelper = XMLHelper()
