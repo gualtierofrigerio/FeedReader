@@ -17,12 +17,13 @@ struct FeedView: View {
             }
             else {
                 if #available(iOS 15.0, *) {
-                    List(viewModel.feed.entries) { entry in
+                    List(viewModel.feedEntries) { entry in
                         viewForEntry(entry)
                     }
                     .refreshable {
                         await viewModel.refreshFeedAsync(forceReload: true)
                     }
+                    .searchable(text: $viewModel.searchText)
                 }
                 else {
                     RefreshableView(action: {
