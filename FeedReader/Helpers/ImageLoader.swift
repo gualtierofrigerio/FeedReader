@@ -26,7 +26,7 @@ class ImageLoader: ObservableObject {
     
     private func loadImage(fromURL url:URL) {
         if #available(iOS 15.0, *) {
-            detach {
+            Task.init {
                 if let image = await self.imageCache.imageForURLAsync(url) {
                     DispatchQueue.main.async {
                         self.image = image
