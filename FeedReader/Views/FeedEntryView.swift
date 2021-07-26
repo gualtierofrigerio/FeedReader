@@ -16,33 +16,33 @@ struct FeedEntryView: View {
     
     var body: some View {
         HStack {
-            if let url = entry.image {
-                ImageView(withURL: url)
-            }
-            else {
-                ImageView.empty()
-            }
-            VStack(alignment: .leading) {
-                Text(entry.title)
-                HStack {
-                    Text(entry.category)
+            CustomImageView(url: entry.image)
+                .frame(width:100, height:100)
+            infoView
+        }
+    }
+    
+    private var infoView: some View {
+        VStack(alignment: .leading) {
+            Text(entry.title)
+            HStack {
+                Text(entry.category)
+                    .font(Font.caption)
+                    .foregroundColor(.secondary)
+                if showFeedName {
+                    Text(entry.feedName)
                         .font(Font.caption)
                         .foregroundColor(.secondary)
-                    if showFeedName {
-                        Text(entry.feedName)
-                            .font(Font.caption)
-                            .foregroundColor(.secondary)
+                }
+                Spacer()
+                Button {
+                    toggleFavorite()
+                } label: {
+                    if isFavorite {
+                        Image(systemName: "heart.fill")
                     }
-                    Spacer()
-                    Button {
-                        toggleFavorite()
-                    } label: {
-                        if isFavorite {
-                            Image(systemName: "heart.fill")
-                        }
-                        else {
-                            Image(systemName: "heart")
-                        }
+                    else {
+                        Image(systemName: "heart")
                     }
                 }
             }
