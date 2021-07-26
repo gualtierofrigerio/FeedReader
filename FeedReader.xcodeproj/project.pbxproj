@@ -30,6 +30,7 @@
 		25C49478260E309E00FD2758 /* FeedEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C49477260E309E00FD2758 /* FeedEntryView.swift */; };
 		25C4947F260E495300FD2758 /* FeedTopicHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C4947E260E495300FD2758 /* FeedTopicHelper.swift */; };
 		25C4948D260E4DA300FD2758 /* AppleTopics.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 25C4948C260E4DA300FD2758 /* AppleTopics.mlmodel */; };
+		25C7C48526734AAA00B34212 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C7C48426734AAA00B34212 /* CustomImageView.swift */; };
 		25C9BD9A262B499D007C8D8B /* FeedListEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C9BD99262B499D007C8D8B /* FeedListEntry.swift */; };
 		25C9BD9E262D7DD7007C8D8B /* FavoritesHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C9BD9D262D7DD7007C8D8B /* FavoritesHandler.swift */; };
 		25C9BDA7262DC32E007C8D8B /* StorageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C9BDA6262DC32E007C8D8B /* StorageUtils.swift */; };
@@ -63,6 +64,7 @@
 		25C49477260E309E00FD2758 /* FeedEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedEntryView.swift; sourceTree = "<group>"; };
 		25C4947E260E495300FD2758 /* FeedTopicHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTopicHelper.swift; sourceTree = "<group>"; };
 		25C4948C260E4DA300FD2758 /* AppleTopics.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = AppleTopics.mlmodel; sourceTree = "<group>"; };
+		25C7C48426734AAA00B34212 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		25C9BD99262B499D007C8D8B /* FeedListEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedListEntry.swift; sourceTree = "<group>"; };
 		25C9BD9D262D7DD7007C8D8B /* FavoritesHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesHandler.swift; sourceTree = "<group>"; };
 		25C9BDA6262DC32E007C8D8B /* StorageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageUtils.swift; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 			children = (
 				25BEF230264EBF7A002BC41C /* AddNewFeed.swift */,
 				25B006362612129700E17748 /* ArticleView.swift */,
+				25C7C48426734AAA00B34212 /* CustomImageView.swift */,
 				25C49477260E309E00FD2758 /* FeedEntryView.swift */,
 				25C4945C260E1E2A00FD2758 /* FeedView.swift */,
 				25B0E57E261352B4006DBE5E /* ImageView.swift */,
@@ -156,11 +159,11 @@
 			children = (
 				25C9BD9D262D7DD7007C8D8B /* FavoritesHandler.swift */,
 				25C4947E260E495300FD2758 /* FeedTopicHelper.swift */,
+				257EC0A52645A15000943113 /* ImageCache.swift */,
 				25B0E57B2613524D006DBE5E /* ImageLoader.swift */,
 				25CAAB5B261C53B5009FB26D /* RESTClient.swift */,
 				25C9BDA6262DC32E007C8D8B /* StorageUtils.swift */,
 				25C4946A260E233900FD2758 /* XMLHelper.swift */,
-				257EC0A52645A15000943113 /* ImageCache.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -260,6 +263,7 @@
 				25C9BD9A262B499D007C8D8B /* FeedListEntry.swift in Sources */,
 				25BABE6726288A6400D967F4 /* SelectFeed.swift in Sources */,
 				25BABE6A26288B8E00D967F4 /* FeedList.swift in Sources */,
+				25C7C48526734AAA00B34212 /* CustomImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,7 +321,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -372,7 +376,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -389,6 +393,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"FeedReader/Preview Content\"";
+				DEVELOPMENT_TEAM = EMNHGG4C7C;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = FeedReader/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
@@ -410,6 +415,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"FeedReader/Preview Content\"";
+				DEVELOPMENT_TEAM = EMNHGG4C7C;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = FeedReader/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
