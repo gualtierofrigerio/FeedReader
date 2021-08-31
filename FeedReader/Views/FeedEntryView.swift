@@ -10,8 +10,9 @@ import SwiftUI
 struct FeedEntryView: View {
     var entry:FeedEntry
     var showFeedName:Bool
-    var tapCategoryAction:() -> Void
-    var toggleFavorite:() -> Void
+    var tapCategoryAction: () -> Void
+    var tapOnView: () -> Void
+    var toggleFavorite: () -> Void
     var isFavorite:Bool
     
     var body: some View {
@@ -24,25 +25,31 @@ struct FeedEntryView: View {
     
     private var infoView: some View {
         VStack(alignment: .leading) {
-            Text(entry.title)
-            HStack {
-                Text(entry.category)
-                    .font(Font.caption)
-                    .foregroundColor(.secondary)
-                if showFeedName {
-                    Text(entry.feedName)
+            Button {
+                print("tap on view")
+                tapOnView()
+            } label: {
+                Text(entry.title)
+                HStack {
+                    Text(entry.category)
                         .font(Font.caption)
                         .foregroundColor(.secondary)
-                }
-                Spacer()
-                Button {
-                    toggleFavorite()
-                } label: {
-                    if isFavorite {
-                        Image(systemName: "heart.fill")
+                    if showFeedName {
+                        Text(entry.feedName)
+                            .font(Font.caption)
+                            .foregroundColor(.secondary)
                     }
-                    else {
-                        Image(systemName: "heart")
+                    Spacer()
+                    Button {
+                        print("toggle favorite")
+                        toggleFavorite()
+                    } label: {
+                        if isFavorite {
+                            Image(systemName: "heart.fill")
+                        }
+                        else {
+                            Image(systemName: "heart")
+                        }
                     }
                 }
             }
@@ -60,6 +67,7 @@ struct FeedEntryView_Previews: PreviewProvider {
         FeedEntryView(entry:testEntry,
                       showFeedName: false,
                       tapCategoryAction:{},
+                      tapOnView: {},
                       toggleFavorite: {},
                       isFavorite: false)
     }
