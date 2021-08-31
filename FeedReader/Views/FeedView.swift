@@ -104,20 +104,18 @@ struct FeedView: View {
     }
     
     @ViewBuilder private func viewForEntry(_ entry: FeedEntry) -> some View {
-        Button {
+        FeedEntryView(entry:entry,
+                      showFeedName: viewModel.showFeedNameInEntry,
+                      tapCategoryAction: {
+            tapCategoryAction(entry: entry)
+        },
+                      tapOnView: {
             viewModel.userSelectedEntry(entry)
-        } label: {
-            FeedEntryView(entry:entry,
-                          showFeedName: viewModel.showFeedNameInEntry,
-                          tapCategoryAction: {
-                            tapCategoryAction(entry: entry)
-                          },
-                          toggleFavorite: {
-                            viewModel.entryToggleFavorite(entry)
-                          },
-                          isFavorite: viewModel.entryIsFavorite(entry))
-        }
-        .buttonStyle(PlainButtonStyle())
+        },
+                      toggleFavorite: {
+            viewModel.entryToggleFavorite(entry)
+        },
+                      isFavorite: viewModel.entryIsFavorite(entry))
     }
 }
 
