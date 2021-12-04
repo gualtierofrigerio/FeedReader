@@ -28,6 +28,7 @@ struct ArticleView: View {
     }
 }
 
+#if os(iOS)
 struct SafariView: UIViewControllerRepresentable {
     let url: URL
     let delegate:SFSafariViewControllerDelegate
@@ -58,6 +59,25 @@ struct WebKitView: UIViewRepresentable {
         
     }
 }
+#endif
+
+#if os(macOS)
+struct WebKitView: NSViewRepresentable {
+    let url: URL
+    let delegate:WKNavigationDelegate
+    
+    func makeNSView(context: Context) -> some NSView {
+        let webView = WKWebView()
+        webView.navigationDelegate = delegate
+        webView.load(URLRequest(url: url))
+        return webView
+    }
+    
+    func updateNSView(_ nsView: NSViewType, context: Context) {
+        
+    }
+}
+#endif
 
 
 fileprivate let testEntry = FeedEntry(title: "Title",
