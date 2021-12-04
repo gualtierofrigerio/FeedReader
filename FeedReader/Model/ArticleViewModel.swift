@@ -20,6 +20,7 @@ class ArticleViewModel: NSObject,ObservableObject {
     }
 }
 
+#if os(iOS)
 extension ArticleViewModel: SFSafariViewControllerDelegate {
     func safariViewController(_ controller: SFSafariViewController,
                               didCompleteInitialLoad didLoadSuccessfully: Bool) {
@@ -30,6 +31,7 @@ extension ArticleViewModel: SFSafariViewControllerDelegate {
         showSpinner = false
     }
 }
+#endif
 
 extension ArticleViewModel: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
