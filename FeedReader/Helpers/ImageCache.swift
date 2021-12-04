@@ -45,6 +45,7 @@ class ImageCache {
     }
     
     private func loadImage(url:URL, completion: @escaping ImageCacheCompletion) {
+        print("load image at url \(url)")
         RESTClient.loadData(atURL: url) { result in
             switch result {
             case .success(let data):
