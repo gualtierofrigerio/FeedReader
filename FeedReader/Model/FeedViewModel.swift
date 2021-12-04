@@ -96,7 +96,7 @@ class FeedViewModel:ObservableObject {
         }
     }
     
-    @available(iOS 15.0, *)
+    @available(iOS 15.0, macOS 12.0, *)
     func refreshFeedAsync(forceReload: Bool) async {
         if isReloading {
             return
@@ -163,7 +163,7 @@ class FeedViewModel:ObservableObject {
         }.eraseToAnyPublisher()
     }
     
-    @available(iOS 15.0, *)
+    @available(iOS 15.0, macOS 12.0, *)
     private func loadEntriesFromURL(_ url: URL, feedName: String) async -> [FeedEntry]? {
         let xmlHelper = XMLHelper()
         if let array = await xmlHelper.parseXML(atURL: url, elementName: "item") {
@@ -172,7 +172,7 @@ class FeedViewModel:ObservableObject {
         return nil
     }
     
-    @available(iOS 15.0, *)
+    @available(iOS 15.0, macOS 12.0, *)
     private func loadFeedFromListEntry(_ entry: FeedListEntry) async -> Feed? {
         var feed: Feed? = nil
         switch entry.type {
@@ -209,7 +209,7 @@ class FeedViewModel:ObservableObject {
         }
     }
     
-    @available(iOS 15.0, *)
+    @available(iOS 15.0, macOS 12.0, *)
     private func loadFeedFromAggregatedEntries(_ entries: [FeedListEntry]) async -> Feed? {
         var allEntries: [FeedEntry] = []
         for aggregatedEntry in entries {
@@ -254,7 +254,7 @@ class FeedViewModel:ObservableObject {
         }
     }
     
-    @available(iOS 15.0, *)
+    @available(iOS 15.0, macOS 12.0, *)
     private func loadFeedFromURL(_ url: URL, feedName: String) async -> Feed? {
         let xmlHelper = XMLHelper()
         if let xmlArray = await xmlHelper.parseXML(atURL: url, elementName: "item") {
