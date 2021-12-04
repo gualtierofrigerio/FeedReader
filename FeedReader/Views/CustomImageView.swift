@@ -12,7 +12,7 @@ struct CustomImageView: View {
     
     var body: some View {
         if let url = url {
-            if #available(iOS 15.0, *) {
+            if #available(iOS 15.0, macOS 12.0, *) {
                 AsyncImage(url: url) { phase in
                     viewForPhase(phase)
                 }
@@ -26,7 +26,7 @@ struct CustomImageView: View {
         }
     }
     
-    @available(iOS 15.0, *)
+    @available(iOS 15.0, macOS 12.0, *)
     @ViewBuilder
     private func viewForPhase(_ phase:AsyncImagePhase) -> some View {
         switch phase {
