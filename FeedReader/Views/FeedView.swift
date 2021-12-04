@@ -16,7 +16,7 @@ struct FeedView: View {
                 Text("Feed empty")
             }
             else {
-                if #available(iOS 15.0, *) {
+                if #available(iOS 15.0, macOS 12.0, *) {
                     List(viewModel.feedEntries) { entry in
                         viewForEntry(entry)
                     }
