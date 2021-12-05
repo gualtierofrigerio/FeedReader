@@ -49,7 +49,9 @@ struct SelectFeed: View {
             }
         }
         .modifier(ActivityIndicatorModifier(showActivityIndicator: $showActivityIndicator))
+        #if os(iOS)
         .navigationBarTitle("Your feeds")
+        #endif
         .sheet(isPresented: $viewModel.showNewFeedView) {
             sheetAddFeed
         }
